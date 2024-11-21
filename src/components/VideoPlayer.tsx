@@ -3,9 +3,14 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 import yellowPlayIcon from "@/assets/videoPlayer/yellow-play.svg";
+import yellowPauseIcon from "@/assets/videoPlayer/yellow-pause.svg";
 import whitePlayIcon from "@/assets/videoPlayer/white-play.svg";
+import whitePauseIcon from "@/assets/videoPlayer/white-pause.svg";
 import volumeHighIcon from "@/assets/videoPlayer/volume-high.svg";
-import fullScreenIcon from "@/assets/videoPlayer/full-screen.svg";
+import volumeLowIcon from "@/assets/videoPlayer/volume-low.svg";
+import noVolumeIcon from "@/assets/videoPlayer/no-volume.svg";
+import maximizeIcon from "@/assets/videoPlayer/maximize.svg";
+import minimizeIcon from "@/assets/videoPlayer/minimize.svg";
 import forwardIcon from "@/assets/videoPlayer/forward.svg";
 
 interface VideoPlayerProps {
@@ -26,25 +31,38 @@ export default function VideoPlayer({
     "playing" | "paused" | "loading"
   >("paused");
   const [progress, setProgress] = useState<number>(0);
+  const [showPlayPauseButton, setShowPlayPauseButton] = useState<boolean>(true);
+  const [fullScreen, setFullScreen] = useState<boolean>(false);
+  const [volume, setVolume] = useState<number>(1);
 
-  const handlePlay = () => {
+  const handlePlay = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
     if (videoRef.current && audioRef.current) {
       setPlaybackState("loading");
       Promise.all([videoRef.current.play(), audioRef.current.play()])
-        .then(() => setPlaybackState("playing"))
+        .then(() => {
+          setPlaybackState("playing");
+          setShowPlayPauseButton(true);
+          setTimeout(() => setShowPlayPauseButton(false), 1000); // Hide after 2 seconds
+        })
         .catch(() => setPlaybackState("paused"));
     }
   };
 
-  const handlePause = () => {
+  const handlePause = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
     if (videoRef.current && audioRef.current) {
       videoRef.current.pause();
       audioRef.current.pause();
       setPlaybackState("paused");
+      setShowPlayPauseButton(true);
     }
   };
 
-  const handleVolumeToggle = () => {
+  const handleVolumeToggle = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
     if (audioRef.current) {
       audioRef.current.muted = !isMuted;
       setIsMuted(!isMuted);
@@ -54,6 +72,7 @@ export default function VideoPlayer({
   const handleVolumeChange = (volume: number) => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
+      setVolume(volume);
     }
   };
 
@@ -66,11 +85,16 @@ export default function VideoPlayer({
     }
   };
 
-  const toggleFullScreen = () => {
+  const toggleFullScreen = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
     if (!document.fullscreenElement) {
       containerRef.current?.requestFullscreen();
+      setFullScreen(true);
     } else {
       document.exitFullscreen();
+      setFullScreen(false);
     }
   };
 
@@ -83,11 +107,27 @@ export default function VideoPlayer({
   };
 
   const seekVideo = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.stopPropagation();
     if (videoRef.current) {
       const rect = (e.target as HTMLDivElement).getBoundingClientRect();
       const clickX = e.clientX - rect.left;
-      const newTime = (clickX / rect.width) * videoRef.current.duration;
+      const newTime =
+        (clickX / e.currentTarget.offsetWidth) * videoRef.current.duration;
       videoRef.current.currentTime = newTime;
+    }
+  };
+
+  const handleForward = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    if (videoRef.current) {
+      const duration = videoRef.current.duration;
+      if (duration - 10 > videoRef.current.currentTime) {
+        videoRef.current.currentTime += 10;
+      } else {
+        videoRef.current.currentTime = duration;
+      }
     }
   };
 
@@ -141,46 +181,49 @@ export default function VideoPlayer({
       ref={containerRef}
       className='rounded-3xl relative w-full h-full bg-black overflow-hidden'
       style={{ maxWidth: "800px", aspectRatio: "16/9" }} // Example initial size
-    >
+      onClick={playbackState === "paused" ? handlePlay : handlePause}>
       {/* Video Element */}
       <div className='relative rounded-lg overflow-hidden'>
         <video ref={videoRef} className='w-full rounded-lg' src={videoApiUrl} />
         <div className='absolute inset-0 flex items-center justify-center'>
-          {playbackState === "paused" && (
-            <button
-              onClick={handlePlay}
-              className='p-4 pl-5 bg-black bg-opacity-50 rounded-full flex justify-center items-center'>
-              <Image
-                src={yellowPlayIcon}
-                alt='play-icon'
-                width='25'
-                height='25'
-              />
-            </button>
-          )}
+          <button
+            className={`p-4 bg-black bg-opacity-50 rounded-full flex justify-center items-center transition-opacity duration-500 ${
+              showPlayPauseButton ? "opacity-100" : "opacity-0"
+            }`}>
+            <Image
+              src={
+                playbackState === "paused" ? yellowPlayIcon : yellowPauseIcon
+              }
+              alt={playbackState === "paused" ? "play-icon" : "pause-icon"}
+              width='25'
+              height='25'
+            />
+          </button>
           {playbackState === "loading" && <div className='loader'></div>}
-          {playbackState === "playing" && (
-            <button
-              onClick={handlePause}
-              className='p-4 bg-black bg-opacity-50 rounded-full'>
-              <Image src={whitePlayIcon} alt='pause-icon' />
-            </button>
-          )}
         </div>
         {/* Controls */}
         <div className='controls-linear-gradient absolute bottom-0 w-full rounded-lg'>
           <div className='flex items-center justify-between px-4 py-2 mb-0.5'>
             <div className='flex items-center gap-2'>
               <button
-                onClick={playbackState === "paused" ? handlePlay : handlePause}
                 className={`${button} ${
                   playbackState === "paused" ? "pl-3" : ""
                 }`}>
-                {playbackState === "paused" ? (
-                  <Image src={whitePlayIcon} alt='white-play-icon' />
-                ) : (
-                  <>pause</>
-                )}
+                <Image
+                  width={20}
+                  height={20}
+                  src={
+                    playbackState === "paused" ? whitePlayIcon : whitePauseIcon
+                  }
+                  alt={
+                    playbackState === "paused"
+                      ? "white-play-icon"
+                      : "white-pause-icon"
+                  }
+                />
+              </button>
+              <button onClick={handleForward} className={button}>
+                <Image src={forwardIcon} alt='forward-icon' />
               </button>
             </div>
             <div className='flex items-center gap-2'>
@@ -188,22 +231,38 @@ export default function VideoPlayer({
                 <button
                   onClick={handleVolumeToggle}
                   className={`text-white shadow-md focus:outline-none ${button}`}>
-                  <Image src={volumeHighIcon} alt='volume-high-icon' />
+                  <Image
+                    src={
+                      isMuted
+                        ? noVolumeIcon
+                        : volume < 0.5
+                        ? volumeLowIcon
+                        : volumeHighIcon
+                    }
+                    alt='volume-high-icon'
+                  />
                 </button>
-                <div className='absolute bottom100 w-full flex justify-center'>
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className='absolute bottom100 w-full flex justify-center'>
                   <input
                     type='range'
                     min='0'
                     max='1'
                     step='0.01'
                     defaultValue='1'
-                    onChange={(e) => handleVolumeChange(Number(e.target.value))}
+                    onChange={(e) => {
+                      handleVolumeChange(Number(e.target.value));
+                    }}
                     className='w-0 opacity-0 group-hover:opacity-100 rotate-270 translate-x-1/2'
                   />
                 </div>
               </div>
               <button onClick={toggleFullScreen} className={button}>
-                <Image src={fullScreenIcon} alt='full-screen-icon' />
+                <Image
+                  src={fullScreen ? minimizeIcon : maximizeIcon}
+                  alt='full-screen-icon'
+                />
               </button>
             </div>
           </div>
