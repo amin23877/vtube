@@ -13,15 +13,11 @@ import maximizeIcon from "@/assets/videoPlayer/maximize.svg";
 import minimizeIcon from "@/assets/videoPlayer/minimize.svg";
 import forwardIcon from "@/assets/videoPlayer/forward.svg";
 
-interface VideoPlayerProps {
-  videoApiUrl: string;
-  audioApiUrl: string;
-}
+type IVideoPlayer = {
+  id: string;
+};
 
-export default function VideoPlayer({
-  videoApiUrl,
-  audioApiUrl,
-}: VideoPlayerProps) {
+export default function VideoPlayer({ id }: IVideoPlayer) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -178,19 +174,36 @@ export default function VideoPlayer({
 
   return (
     <div
+      dir='ltr'
       ref={containerRef}
-      className='rounded-3xl relative w-full h-full bg-black overflow-hidden'
-      style={{ maxWidth: "800px", aspectRatio: "16/9" }} // Example initial size
+      className='rounded-3xl relative w-full h-fit bg-black overflow-hidden dir'
+      style={{ aspectRatio: "16/9" }}
       onClick={playbackState === "paused" ? handlePlay : handlePause}>
       {/* Video Element */}
       <div className='relative rounded-lg overflow-hidden'>
-        <video ref={videoRef} className='w-full rounded-lg' src={videoApiUrl} />
+        <video
+          style={{ aspectRatio: "16/9" }}
+          ref={videoRef}
+          className='w-full rounded-lg'
+          src={`https://wt.pool2jibi.com/youtube/download-status?video_id=${id}&media_type=VIDEO`}
+        />
         <div className='absolute inset-0 flex items-center justify-center'>
           <button
-            className={`p-4 bg-black bg-opacity-50 rounded-full flex justify-center items-center transition-opacity duration-500 ${
+            className={`relative p-4 bg-black bg-opacity-50 rounded-full flex justify-center items-center transition-opacity duration-500 ${
               showPlayPauseButton ? "opacity-100" : "opacity-0"
             }`}>
+            {playbackState === "loading" && (
+              <div
+                className='absolute loader bg-yellow'
+                style={{
+                  width: "calc(100% + 8px)",
+                  height: "calc(100% + 8px)",
+                  borderColor: "#d9c3134d",
+                  borderTop: "4px solid #d9c313",
+                }}></div>
+            )}
             <Image
+              className={playbackState === "paused" ? "translate-x-px" : ""}
               src={
                 playbackState === "paused" ? yellowPlayIcon : yellowPauseIcon
               }
@@ -199,7 +212,6 @@ export default function VideoPlayer({
               height='25'
             />
           </button>
-          {playbackState === "loading" && <div className='loader'></div>}
         </div>
         {/* Controls */}
         <div className='controls-linear-gradient absolute bottom-0 w-full rounded-lg'>
@@ -281,7 +293,10 @@ export default function VideoPlayer({
       </div>
 
       {/* Audio Element */}
-      <audio ref={audioRef} src={audioApiUrl} />
+      <audio
+        ref={audioRef}
+        src={`https://wt.pool2jibi.com/youtube/download-status?video_id=${id}&media_type=AUDIO`}
+      />
     </div>
   );
 }
