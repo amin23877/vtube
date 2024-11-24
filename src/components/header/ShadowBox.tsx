@@ -11,7 +11,7 @@ export default function ShadowBox({
   src?: string | StaticImport;
 }) {
   return (
-    <div className='m-10 mt-0 rounded-b-3xl overflow-hidden bg-gray-400 bg-opacity-5'>
+    <div className="m-10 mt-0 rounded-b-3xl overflow-hidden bg-gray-400 bg-opacity-5">
       {src && (
         <Image
           style={{
@@ -25,10 +25,10 @@ export default function ShadowBox({
           }}
           src={src}
           width={5000}
-          alt=''
+          alt=""
         />
       )}
-      <div className='shadowBox'>{children}</div>
+      <div className="shadowBox">{children}</div>
     </div>
   );
 }

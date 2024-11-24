@@ -25,27 +25,26 @@ export default function SearchVideoItem({ video }: { video: IVideo }) {
   const translate = (name: string) => {
     let theName = name;
     translateList.map((x) => {
-      console.log(x, theName);
       theName = theName.replace(x.n, x.t);
     });
     return theName;
   };
 
   return (
-    <div className='min-w-[320px]'>
+    <div className="min-w-[320px] max-w-sm">
       <Image
         style={{ aspectRatio: "16/9" }}
-        src={`https://wt.pool2jibi.com/youtube/get-thumbnail?thumbnail_url=${video.thumbnail_url}`}
+        src={`https://wt.pool2jibi.com/youtube/proxy-thumbnail?thumbnail_url=${video.thumbnail_url}`}
         alt={video.title}
         width={480}
         height={270}
-        className='w-full h-auto object-cover rounded-[12px]'
+        className="w-full h-auto object-cover rounded-[12px]"
       />
-      <h3 className='mt-2 text-lg font-semibold'>{video.title}</h3>
-      <p className='text-sm text-[#808184]'>{video.author}</p>
-      <span className='text-[#808184]'>
+      <h3 className="mt-2 text-lg font-semibold">{video.title}</h3>
+      <p className="text-sm text-[#808184]">{video.author}</p>
+      <span className="text-[#808184]">
         {video.view_count.replace("views", "بازدید")} .{" "}
-        {translate(video.publish_date)}
+        {translate(video.publish_date || "")}
       </span>
     </div>
   );

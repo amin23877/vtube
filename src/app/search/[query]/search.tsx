@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { search } from "@/api/list";
 import { ISearch, IVideo } from "@/app/types";
 import SearchVideoItem from "@/components/SearchVideoItem";
@@ -16,39 +16,42 @@ export default function Search({
   const [cursor, setCursor] = useState<string>(first_data.cursor || "");
   const [isLoading, setLoading] = useState(false);
 
-  let loading = false;
+  const loadingRef = useRef(false);
+  const handleScroll = useCallback(() => {
+    if (loadingRef.current || isLoading) return;
+
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      loadingRef.current = true;
+      setLoading(true);
+
+      search(query, true, cursor)
+        .then((res) => {
+          setVideos((x) => [...x, ...res.videos]);
+          setCursor(res.cursor);
+        })
+        .then(() => {
+          loadingRef.current = false;
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          loadingRef.current = false;
+          setLoading(false);
+        });
+    }
+  }, [cursor, isLoading, query]);
+
   useEffect(() => {
-    const handleScroll = () => {
-      if (loading) return;
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        loading = true;
-        setLoading(true);
-
-        search(query, true, cursor)
-          .then((res: ISearch) => {
-            setVideos((x) => [...x, ...res.videos]);
-            setCursor(res.cursor);
-          })
-          .then(() => {
-            loading = false;
-            setLoading(false);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [handleScroll]);
 
   return (
     <div>
-      <div className='flex flex-wrap sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 '>
+      <div className="flex flex-wrap sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 justify-start">
         {videos.map((video, index) => {
           return (
-            <div key={index} className='flex-1 mb-8'>
+            <div key={index} className="flex-1 mb-8">
               <Link href={`/video/${video.video_id}`}>
                 <SearchVideoItem video={video} />
               </Link>
@@ -56,7 +59,7 @@ export default function Search({
           );
         })}
       </div>
-      {isLoading && <div className='text-center py-4 loader'></div>}
+      {isLoading && <div className=" py-4 loader  mr-auto ml-auto"></div>}
     </div>
   );
 }

@@ -174,33 +174,42 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
 
   return (
     <div
-      dir='ltr'
+      dir="ltr"
       ref={containerRef}
-      className='rounded-3xl relative w-full h-fit bg-black overflow-hidden dir'
-      style={{ aspectRatio: "16/9" }}
-      onClick={playbackState === "paused" ? handlePlay : handlePause}>
+      className="rounded-3xl relative w-full h-fit bg-black overflow-hidden dir"
+      style={{
+        aspectRatio: "16/9",
+        height: "calc(100vh - 100px - 2.5rem)",
+      }}
+      onClick={playbackState === "paused" ? handlePlay : handlePause}
+    >
       {/* Video Element */}
-      <div className='relative rounded-lg overflow-hidden'>
+      <div className="relative rounded-lg overflow-hidden">
         <video
-          style={{ aspectRatio: "16/9" }}
+          style={{
+            aspectRatio: "16/9",
+            height: "calc(100vh - 100px - 2.5rem)",
+          }}
           ref={videoRef}
-          className='w-full rounded-lg'
+          className="w-full rounded-lg"
           src={`https://wt.pool2jibi.com/youtube/download-status?video_id=${id}&media_type=VIDEO`}
         />
-        <div className='absolute inset-0 flex items-center justify-center'>
+        <div className="absolute inset-0 flex items-center justify-center">
           <button
             className={`relative p-4 bg-black bg-opacity-50 rounded-full flex justify-center items-center transition-opacity duration-500 ${
               showPlayPauseButton ? "opacity-100" : "opacity-0"
-            }`}>
+            }`}
+          >
             {playbackState === "loading" && (
               <div
-                className='absolute loader bg-yellow'
+                className="absolute loader bg-yellow"
                 style={{
                   width: "calc(100% + 8px)",
                   height: "calc(100% + 8px)",
                   borderColor: "#d9c3134d",
                   borderTop: "4px solid #d9c313",
-                }}></div>
+                }}
+              ></div>
             )}
             <Image
               className={playbackState === "paused" ? "translate-x-px" : ""}
@@ -208,19 +217,20 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
                 playbackState === "paused" ? yellowPlayIcon : yellowPauseIcon
               }
               alt={playbackState === "paused" ? "play-icon" : "pause-icon"}
-              width='25'
-              height='25'
+              width="25"
+              height="25"
             />
           </button>
         </div>
         {/* Controls */}
-        <div className='controls-linear-gradient absolute bottom-0 w-full rounded-lg'>
-          <div className='flex items-center justify-between px-4 py-2 mb-0.5'>
-            <div className='flex items-center gap-2'>
+        <div className="controls-linear-gradient absolute bottom-0 w-full rounded-lg">
+          <div className="flex items-center justify-between px-4 py-2 mb-0.5">
+            <div className="flex items-center gap-2">
               <button
                 className={`${button} ${
                   playbackState === "paused" ? "pl-3" : ""
-                }`}>
+                }`}
+              >
                 <Image
                   width={20}
                   height={20}
@@ -235,14 +245,15 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
                 />
               </button>
               <button onClick={handleForward} className={button}>
-                <Image src={forwardIcon} alt='forward-icon' />
+                <Image src={forwardIcon} alt="forward-icon" />
               </button>
             </div>
-            <div className='flex items-center gap-2'>
-              <div className='relative group'>
+            <div className="flex items-center gap-2">
+              <div className="relative group">
                 <button
                   onClick={handleVolumeToggle}
-                  className={`text-white shadow-md focus:outline-none ${button}`}>
+                  className={`text-white shadow-md focus:outline-none ${button}`}
+                >
                   <Image
                     src={
                       isMuted
@@ -251,42 +262,44 @@ export default function VideoPlayer({ id }: IVideoPlayer) {
                         ? volumeLowIcon
                         : volumeHighIcon
                     }
-                    alt='volume-high-icon'
+                    alt="volume-high-icon"
                   />
                 </button>
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className='absolute bottom100 w-full flex justify-center'>
+                  className="absolute bottom100 w-full flex justify-center"
+                >
                   <input
-                    type='range'
-                    min='0'
-                    max='1'
-                    step='0.01'
-                    defaultValue='1'
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    defaultValue="1"
                     onChange={(e) => {
                       handleVolumeChange(Number(e.target.value));
                     }}
-                    className='w-0 opacity-0 group-hover:opacity-100 rotate-270 translate-x-1/2'
+                    className="w-0 opacity-0 group-hover:opacity-100 rotate-270 translate-x-1/2"
                   />
                 </div>
               </div>
               <button onClick={toggleFullScreen} className={button}>
                 <Image
                   src={fullScreen ? minimizeIcon : maximizeIcon}
-                  alt='full-screen-icon'
+                  alt="full-screen-icon"
                 />
               </button>
             </div>
           </div>
-          <div className='full-w mb-3 px-6'>
+          <div className="full-w mb-3 px-6">
             <div
               onClick={seekVideo}
-              className='h-1 bg-gray-700 cursor-pointer rounded flex'>
+              className="h-1 bg-gray-700 cursor-pointer rounded flex"
+            >
               <div
-                className='h-1 bg-yellow-400 rounded'
+                className="h-1 bg-yellow-400 rounded"
                 style={{ width: `${progress}%` }}
               />
-              <div className='h-2 w-2 rounded-full -translate-y-0.5 bg-white'></div>
+              <div className="h-2 w-2 rounded-full -translate-y-0.5 bg-white"></div>
             </div>
           </div>
         </div>
