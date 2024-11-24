@@ -52,7 +52,7 @@ export default function Search({
         {videos.map((video, index) => {
           return (
             <div key={index} className="flex-1 mb-8">
-              <Link href={`/video/${video.video_id}`}>
+              <Link href={`/video/${video.video_id}/${video.author}`}>
                 <SearchVideoItem video={video} />
               </Link>
             </div>
