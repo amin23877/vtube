@@ -4,6 +4,7 @@ import VideoPlayer from "@/components/VideoPlayer";
 
 type IParams = {
   id: string;
+  author: string;
 };
 
 export default async function Video({ params }: { params: IParams }) {
