@@ -1,7 +1,8 @@
 import { downloadForServer } from "@/api/download";
 import { IDownloadResponse } from "@/app/types";
+import CountsBadge from "@/components/CountsBadge";
 import VideoPlayer from "@/components/VideoPlayer";
-
+import likeIcon from "@/assets/actions/like.svg";
 type IParams = {
   id: string;
 };
@@ -16,6 +17,7 @@ export default async function Video({ params }: { params: IParams }) {
       <p className="py-4 text-3xl font-medium" dir="auto">
         {data.title}
       </p>
+      <CountsBadge count={data.like_count} icon={likeIcon} />
     </div>
   );
 }
