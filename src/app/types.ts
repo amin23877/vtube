@@ -15,7 +15,7 @@ export type ISuggestion = {
 };
 
 export type IVideo = {
-  author: string;
+  channel_username: string;
   badge: string | null;
   duration: string;
   publish_date: string;
@@ -29,4 +29,18 @@ export type IVideo = {
 export type ISearch = {
   videos: IVideo[];
   cursor: string;
+};
+
+export type IDownloadResponse = {
+  itag: number;
+  title: string;
+  filesize: number;
+  resolution: string;
+  like_count: number;
+  view_count: number;
+  comment_count: string;
+  description: string;
+  thumbnail_url: string;
+  channel_username: string;
+  channel_thumbnail_url: string;
 };

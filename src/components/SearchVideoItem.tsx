@@ -41,7 +41,7 @@ export default function SearchVideoItem({ video }: { video: IVideo }) {
         className="w-full h-auto object-cover rounded-[12px]"
       />
       <h3 className="mt-2 text-lg font-semibold">{video.title}</h3>
-      <p className="text-sm text-[#808184]">{video.author}</p>
+      <p className="text-sm text-[#808184]">{video.channel_username}</p>
       <span className="text-[#808184]">
         {video.view_count.replace("views", "بازدید")} .{" "}
         {translate(video.publish_date || "")}
