@@ -31,9 +31,11 @@ function ButtonBadge({
   return (
     <div
       className={
-        "flex justify-center items-center gap-2 px-4 py-2 bg-gray rounded-full text-white " +
+        "flex justify-center items-center gap-2 px-4 py-2 bg-custom-gray rounded-full text-white " +
         `${
-          !disabled ? "cursor-pointer hover:bg-[#F1D815] hover:text-gray" : ""
+          !disabled
+            ? "cursor-pointer hover:bg-[#F1D815] hover:text-custom-gray"
+            : ""
         }`
       }
       onMouseEnter={handleMouseEnter}

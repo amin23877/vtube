@@ -1,4 +1,5 @@
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { Dispatch, SetStateAction } from "react";
 
 export type IMovie = {
   id: number;
@@ -44,4 +45,41 @@ export type IDownloadResponse = {
   channel_username: string;
   channel_subscribers: string;
   channel_thumbnail_url: string;
+};
+
+export type IControls = {
+  button: string;
+  playbackState: "playing" | "paused" | "loading";
+  handleForward: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  data: IDownloadResponse[];
+  setItag: Dispatch<SetStateAction<number>>;
+  itag?: number;
+  id: string;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  setCqLoading: Dispatch<SetStateAction<boolean>>;
+  isLoading: boolean;
+  handleVolumeToggle: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => void;
+  handleVolumeChange: (e: number) => void;
+  volume: number;
+  toggleFullScreen: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => void;
+  fullScreen: boolean;
+  seekVideo: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  progress: number;
+};
+
+export type IChanelData = {
+  badge: string;
+  banner: string;
+  channel_id: string;
+  channel_name: string;
+  description: string;
+  is_family_safe: boolean;
+  thumbnail: string;
+  total_subscribers: string;
+  total_videos: string;
+  total_views: number;
 };

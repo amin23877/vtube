@@ -2,17 +2,9 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import { getQualities } from "@/api/download";
-import Image from "next/image";
 
-import yellowPlayIcon from "@/assets/videoPlayer/yellow-play.svg";
-import yellowPauseIcon from "@/assets/videoPlayer/yellow-pause.svg";
-import whitePlayIcon from "@/assets/videoPlayer/white-play.svg";
-import whitePauseIcon from "@/assets/videoPlayer/white-pause.svg";
-import forwardIcon from "@/assets/videoPlayer/forward.svg";
-import FullScreen from "./fullScreen";
-import ProgressBar from "./progressBar";
-import Volume from "./volume";
-import Setting from "./setting";
+import CenterButton from "./centerButton";
+import Controls from "./controls";
 
 type IVideoPlayer = {
   id: string;
@@ -40,20 +32,22 @@ export default function VideoPlayer({
   const [playbackState, setPlaybackState] = useState<
     "playing" | "paused" | "loading"
   >("paused");
+  const [cqLoading, setCqLoading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [showPlayPauseButton, setShowPlayPauseButton] = useState<boolean>(true);
   const [fullScreen, setFullScreen] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(1);
 
-  const handlePlay = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e.stopPropagation();
+  const handlePlay = (e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e?.stopPropagation();
     if (videoRef.current) {
       setPlaybackState("loading");
       Promise.all([videoRef.current?.play()])
         .then(() => {
           setPlaybackState("playing");
           setShowPlayPauseButton(true);
-          setTimeout(() => setShowPlayPauseButton(false), 1000); // Hide after 2 seconds
+          setCqLoading(false);
+          setTimeout(() => setShowPlayPauseButton(false), 1000);
         })
         .catch(() => {
           audioRef.current?.pause();
@@ -96,7 +90,6 @@ export default function VideoPlayer({
     }
   };
 
-  // Stop both video and audio if one of them stops
   const synchronizePlayback = () => {
     if (videoRef.current) {
       videoRef.current.pause();
@@ -122,7 +115,9 @@ export default function VideoPlayer({
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
       const duration = videoRef.current.duration;
-      setProgress((currentTime / duration) * 100);
+      if (!isNaN(duration) && !isNaN(currentTime) && duration !== 0) {
+        setProgress(() => (currentTime / duration) * 100);
+      }
     }
   };
 
@@ -166,7 +161,6 @@ export default function VideoPlayer({
     };
   }, []);
 
-  // Attach event listeners for synchronization
   useEffect(() => {
     const video = videoRef.current;
 
@@ -187,6 +181,49 @@ export default function VideoPlayer({
     };
   }, []);
 
+  useEffect(() => {
+    const handleLoadedMetadata = () => {
+      if (videoRef.current) {
+        videoRef.current.currentTime =
+          progress === 0 ? 0 : (progress * videoRef.current.duration) / 100;
+      }
+      if (audioRef.current) {
+        audioRef.current.currentTime =
+          progress === 0 ? 0 : (progress * audioRef.current.duration) / 100;
+      }
+      if (playbackState === "playing") {
+        handlePlay();
+      } else {
+        setCqLoading(false);
+      }
+    };
+
+    if (videoRef.current) {
+      // Attach the event listener to wait for duration to be available
+      videoRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
+    }
+
+    if (audioRef.current) {
+      audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
+    }
+
+    // Cleanup the event listener
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.removeEventListener(
+          "loadedmetadata",
+          handleLoadedMetadata
+        );
+      }
+      if (audioRef.current) {
+        audioRef.current.removeEventListener(
+          "loadedmetadata",
+          handleLoadedMetadata
+        );
+      }
+    };
+  }, [isLoadingNewRes, progress, playbackState]);
+
   const button =
     "p-2 rounded-full hover:bg-opacity-15 transition-all duration-300 hover:bg-gray-100";
 
@@ -201,7 +238,6 @@ export default function VideoPlayer({
       }}
       onClick={playbackState === "paused" ? handlePlay : handlePause}
     >
-      {/* Video Element */}
       <div className="relative rounded-lg overflow-hidden">
         <video
           poster={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${poster}`}
@@ -225,88 +261,31 @@ export default function VideoPlayer({
             audioItag ? "&itag=" + audioItag : ""
           }`}
         />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <button
-            className={`relative p-4 bg-black bg-opacity-50 rounded-full flex justify-center items-center transition-opacity duration-500 ${
-              showPlayPauseButton ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            {playbackState === "loading" && (
-              <div
-                className="absolute loader bg-yellow"
-                style={{
-                  width: "calc(100% + 8px)",
-                  height: "calc(100% + 8px)",
-                  borderColor: "#d9c3134d",
-                  borderTop: "4px solid #d9c313",
-                }}
-              ></div>
-            )}
-            <Image
-              className={playbackState === "paused" ? "translate-x-px" : ""}
-              src={
-                playbackState === "paused" ? yellowPlayIcon : yellowPauseIcon
-              }
-              alt={playbackState === "paused" ? "play-icon" : "pause-icon"}
-              width="25"
-              height="25"
-            />
-          </button>
-        </div>
-        {/* Controls */}
-        <div className="controls-linear-gradient absolute bottom-0 w-full rounded-lg">
-          <div className="flex items-center justify-between px-4 py-2 mb-0.5">
-            <div className="flex items-center gap-2">
-              <button
-                className={`${button} ${
-                  playbackState === "paused" ? "pl-3" : ""
-                }`}
-              >
-                <Image
-                  width={20}
-                  height={20}
-                  src={
-                    playbackState === "paused" ? whitePlayIcon : whitePauseIcon
-                  }
-                  alt={
-                    playbackState === "paused"
-                      ? "white-play-icon"
-                      : "white-pause-icon"
-                  }
-                />
-              </button>
-              <button onClick={handleForward} className={button}>
-                <Image src={forwardIcon} alt="forward-icon" />
-              </button>
-            </div>
-            <div className="flex items-center gap-2">
-              <Setting
-                itag={itag}
-                button={button}
-                data={data}
-                setItag={setItag}
-                id={id}
-                setIsLoading={setIsLoadingNewRes}
-                isLoading={isLoadingNewRes}
-              />
-              <Volume
-                handleVolumeChange={handleVolumeChange}
-                handleVolumeToggle={handleVolumeToggle}
-                button={button}
-                volume={volume}
-              />
-              <FullScreen
-                toggleFullScreen={toggleFullScreen}
-                button={button}
-                fullScreen={fullScreen}
-              />
-            </div>
-          </div>
-          <ProgressBar seekVideo={seekVideo} progress={progress} />
-        </div>
+        <CenterButton
+          cqLoading={cqLoading}
+          playbackState={playbackState}
+          showPlayPauseButton={showPlayPauseButton}
+        />
+        <Controls
+          button={button}
+          handleForward={handleForward}
+          playbackState={playbackState}
+          itag={itag}
+          data={data}
+          setItag={setItag}
+          id={id}
+          setIsLoading={setIsLoadingNewRes}
+          setCqLoading={setCqLoading}
+          isLoading={isLoadingNewRes}
+          handleVolumeChange={handleVolumeChange}
+          handleVolumeToggle={handleVolumeToggle}
+          volume={volume}
+          toggleFullScreen={toggleFullScreen}
+          fullScreen={fullScreen}
+          seekVideo={seekVideo}
+          progress={progress}
+        />
       </div>
-
-      {/* Audio Element */}
     </div>
   );
 }

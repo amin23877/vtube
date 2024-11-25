@@ -14,6 +14,7 @@ export default function Setting({
   itag,
   id,
   setIsLoading,
+  setCqLoading,
   isLoading,
 }: {
   data: IDownloadResponse[];
@@ -22,6 +23,7 @@ export default function Setting({
   itag?: number;
   id: string;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
+  setCqLoading: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
 }) {
   const [popup, setPopup] = useState(false);
@@ -59,6 +61,7 @@ export default function Setting({
       })
       .finally(() => {
         setIsLoading(false);
+        setCqLoading(true);
       });
   };
 
@@ -70,6 +73,9 @@ export default function Setting({
         setPopup(!popup);
       }}
     >
+      <p className="absolute bottom-0 left-1/2 bg-[#F1D815] text-[#030303] size text-[12px] cursor-pointer">
+        {groupedData.find((x) => x.itags.find((z) => z === itag))?.resolution}
+      </p>
       <div
         className={`absolute bottom-full right-0 mt-2 w-48 rounded shadow-lg z-50 ${
           popup ? "h-auto" : "h-0"

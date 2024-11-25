@@ -17,17 +17,24 @@ const SearchInput = () => {
   const { data, mutate } = useSWR(delayedValue, search);
   const results = data?.top_related_searchs || [];
   const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (results?.length > 0) {
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setSelectedIndex((prev) => (prev + 1) % results.length);
+        setSelectedIndex((prev) => {
+          const newIndex = (prev + 1) % results.length;
+          scrollToItem(newIndex);
+          return newIndex;
+        });
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setSelectedIndex(
-          (prev) => (prev - 1 + results.length) % results.length
-        );
+        setSelectedIndex((prev) => {
+          const newIndex = (prev - 1 + results.length) % results.length;
+          scrollToItem(newIndex);
+          return newIndex;
+        });
       } else if (e.key === "Enter") {
         e.preventDefault();
         if (selectedIndex >= 0) {
@@ -45,6 +52,26 @@ const SearchInput = () => {
         e.preventDefault();
         router.push(`/search/${queryValue}`);
         inputRef.current?.blur();
+      }
+    }
+  };
+
+  const scrollToItem = (index: number) => {
+    if (!listRef.current) return;
+    const item = listRef.current.children[index] as HTMLElement;
+    const container = listRef.current;
+
+    if (item) {
+      const containerTop = container.scrollTop;
+      const containerBottom = containerTop + container.clientHeight;
+
+      const itemTop = item.offsetTop - container.offsetTop;
+      const itemBottom = itemTop + item.offsetHeight;
+
+      if (itemTop < containerTop) {
+        container.scrollTop = itemTop - 8;
+      } else if (itemBottom > containerBottom) {
+        container.scrollTop = itemBottom - container.clientHeight + 8;
       }
     }
   };
@@ -74,11 +101,6 @@ const SearchInput = () => {
     };
   }, [queryValue, mutate]);
 
-  // useEffect(() => {
-  //   mutate(delayedValue);
-  //   setSelectedIndex(-1);
-  // }, [delayedValue, mutate]);
-
   return (
     <div className="relative w-full max-w-screen-sm min-h-[50px]">
       {/* Search Input */}
@@ -100,7 +122,7 @@ const SearchInput = () => {
         </div>
 
         {isFocused && results?.length > 0 && (
-          <div className="my-2 w-full max-h-80 overflow-auto">
+          <div ref={listRef} className="my-2 w-full max-h-80 overflow-auto">
             {results?.map((item: string, index: number) => (
               <div
                 dir="auto"

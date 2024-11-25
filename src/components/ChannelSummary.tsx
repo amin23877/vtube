@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 function ChannelSummary({
   image,
@@ -10,7 +11,7 @@ function ChannelSummary({
   subscribersCount: string;
 }) {
   return (
-    <div className="flex gap-4 mt-8">
+    <Link href={`/youtube/${name}`} className="flex gap-4 mt-8">
       <Image
         src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${image}`}
         alt={name + "avatar"}
@@ -22,7 +23,7 @@ function ChannelSummary({
         <span className="text-xl font-medium">{name}</span>
         <span className="text-[#808184] text-base">{subscribersCount}</span>
       </div>
-    </div>
+    </Link>
   );
 }
 
