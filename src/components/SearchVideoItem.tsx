@@ -34,7 +34,7 @@ export default function SearchVideoItem({ video }: { video: IVideo }) {
     <div className="min-w-[320px] max-w-sm">
       <Image
         style={{ aspectRatio: "16/9" }}
-        src={`https://wt.pool2jibi.com/youtube/proxy-thumbnail?thumbnail_url=${video.thumbnail_url}`}
+        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${video.thumbnail_url}`}
         alt={video.title}
         width={480}
         height={270}
