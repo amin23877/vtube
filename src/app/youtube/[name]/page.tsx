@@ -1,4 +1,5 @@
 import { channel_data } from "@/api/list";
+import Chanel from "./chanel";
 
 type IParams = {
   params: {
@@ -6,7 +7,7 @@ type IParams = {
   };
 };
 
-export default async function Chanel({ params }: IParams) {
+export default async function Youtube({ params }: IParams) {
   const { name } = await params;
   let chanelData;
   let error;
@@ -18,5 +19,5 @@ export default async function Chanel({ params }: IParams) {
       error = err;
     });
   console.log(name, chanelData, error);
-  return <></>;
+  return <Chanel />;
 }
