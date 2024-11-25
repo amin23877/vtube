@@ -17,16 +17,17 @@ import Setting from "./setting";
 type IVideoPlayer = {
   id: string;
   poster: string;
+  defaultITag: number;
 };
 
-export default function VideoPlayer({ id, poster }: IVideoPlayer) {
+export default function VideoPlayer({ id, poster, defaultITag }: IVideoPlayer) {
   const { data } = useSWR(id, getQualities);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [itag, setItag] = useState<number>();
+  const [itag, setItag] = useState<number>(defaultITag);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [playbackState, setPlaybackState] = useState<
     "playing" | "paused" | "loading"
@@ -276,6 +277,7 @@ export default function VideoPlayer({ id, poster }: IVideoPlayer) {
                 button={button}
                 data={data}
                 setItag={setItag}
+                id={id}
               />
               <Volume
                 handleVolumeChange={handleVolumeChange}

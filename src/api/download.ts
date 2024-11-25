@@ -1,8 +1,15 @@
 import { get } from ".";
 
-export const downloadForServer = (id: string) => {
+export const downloadForServer = (
+  id: string,
+  audio_only: boolean = false,
+  itag?: number
+) => {
   return get(
-    `youtube/download-command?video_id=${id}&audio_only=false&download=true`
+    `youtube/download-command?video_id=${id}&audio_only=${audio_only}&download=true` +
+      itag
+      ? "&itag=" + itag
+      : ""
   );
 };
 

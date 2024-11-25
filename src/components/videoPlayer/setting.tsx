@@ -10,11 +10,13 @@ export default function Setting({
   setItag,
   button,
   itag,
+  id,
 }: {
   data: IDownloadResponse[];
-  setItag: Dispatch<SetStateAction<number | undefined>>;
+  setItag: Dispatch<SetStateAction<number>>;
   button: string;
   itag?: number;
+  id: string;
 }) {
   const [popup, setPopup] = useState(false);
 
@@ -43,6 +45,10 @@ export default function Setting({
     return parseRes(a.resolution) - parseRes(b.resolution);
   });
 
+  const handleChangeResolution = async (quality: IQualities) => {
+    // downloadForServer(id,
+  };
+
   return (
     <div
       className="relative"
@@ -66,8 +72,8 @@ export default function Setting({
             }`}
             onClick={(e) => {
               e.stopPropagation();
-              setItag(quality.itags[0]);
               setPopup(false);
+              handleChangeResolution(quality);
             }}
           >
             {quality.resolution}

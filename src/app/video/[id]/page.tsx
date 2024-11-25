@@ -11,11 +11,15 @@ export default async function Video({ params }: { params: IParams }) {
   const { id } = await params;
   const data: IDownloadResponse = await downloadForServer(id);
 
-  console.log(data);
+  if (!data) return <></>;
 
   return (
     <div className="px-10">
-      <VideoPlayer id={id} poster={data.thumbnail_url} />
+      <VideoPlayer
+        id={id}
+        poster={data.thumbnail_url}
+        defaultITag={data.itag}
+      />
       <p className="py-4 text-3xl font-medium" dir="auto">
         {data.title}
       </p>
