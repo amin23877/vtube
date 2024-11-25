@@ -10,6 +10,7 @@ import commentIcon from "@/assets/actions/comment.svg";
 
 import DownloadAudio from "./DownloadAudio";
 import DownloadVideo from "./DownloadVideo";
+import ChannelSummary from "@/components/ChannelSummary";
 
 function VideoDetails({
   data,
@@ -34,6 +35,11 @@ function VideoDetails({
         <DownloadAudio audioItag={audioItag} id={id} />
         <DownloadVideo itag={itag} id={id} />
       </div>
+      <ChannelSummary
+        image={data.channel_thumbnail_url}
+        name={data.channel_username}
+        subscribersCount={data.channel_subscribers}
+      />
     </>
   );
 }

@@ -42,5 +42,6 @@ export type IDownloadResponse = {
   description: string;
   thumbnail_url: string;
   channel_username: string;
+  channel_subscribers: string;
   channel_thumbnail_url: string;
 };

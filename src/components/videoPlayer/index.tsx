@@ -222,7 +222,7 @@ export default function VideoPlayer({
           src={`${
             process.env.NEXT_PUBLIC_HOST
           }youtube/video-stream?video_id=${id}&media_type=AUDIO${
-            itag ? "&itag=" + audioItag : ""
+            audioItag ? "&itag=" + audioItag : ""
           }`}
         />
         <div className="absolute inset-0 flex items-center justify-center">
