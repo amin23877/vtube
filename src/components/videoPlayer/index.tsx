@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import useSWR from "swr";
-import { downloadSpecificQuality, getQualities } from "@/api/download";
+import { getQualities } from "@/api/download";
 import Image from "next/image";
 
 import yellowPlayIcon from "@/assets/videoPlayer/yellow-play.svg";
@@ -17,18 +17,23 @@ import Setting from "./setting";
 type IVideoPlayer = {
   id: string;
   poster: string;
-  defaultITag: number;
+  itag: number;
+  setItag: Dispatch<SetStateAction<number>>;
+  audioItag: number;
 };
 
-export default function VideoPlayer({ id, poster, defaultITag }: IVideoPlayer) {
+export default function VideoPlayer({
+  id,
+  poster,
+  itag,
+  setItag,
+  audioItag,
+}: IVideoPlayer) {
   const { data } = useSWR(id, getQualities);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const [itag, setItag] = useState<number>(defaultITag);
-  const [audioItag, setAudioItag] = useState<number>(defaultITag);
 
   const [isLoadingNewRes, setIsLoadingNewRes] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(false);
@@ -184,12 +189,6 @@ export default function VideoPlayer({ id, poster, defaultITag }: IVideoPlayer) {
 
   const button =
     "p-2 rounded-full hover:bg-opacity-15 transition-all duration-300 hover:bg-gray-100";
-
-  useEffect(() => {
-    downloadSpecificQuality(id, true).then((data) => {
-      setAudioItag(data.itag);
-    });
-  }, [id]);
 
   return (
     <div

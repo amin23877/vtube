@@ -95,7 +95,9 @@ export default function Setting({
       </div>
       <button className={button}>
         {isLoading ? (
-          <Loading />
+          <div className="relative w-[30px] h-[25px]">
+            <Loading />
+          </div>
         ) : (
           <Image src={settingIcon} alt="setting-icon" />
         )}
