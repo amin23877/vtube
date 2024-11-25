@@ -9,7 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 
 const SearchInput = () => {
   const { query } = useParams();
-  const [queryValue, setQueryValue] = useState(query || "");
+  const [queryValue, setQueryValue] = useState<string>((query as string) || "");
   const [delayedValue, setDelayedValue] = useState(query || "");
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [isFocused, setIsFocused] = useState(false);
@@ -39,6 +39,12 @@ const SearchInput = () => {
           router.push(`/search/${queryValue}`);
           inputRef.current?.blur();
         }
+      }
+    } else {
+      if (e.key === "Enter" && queryValue.trim() !== "") {
+        e.preventDefault();
+        router.push(`/search/${queryValue}`);
+        inputRef.current?.blur();
       }
     }
   };
@@ -86,7 +92,7 @@ const SearchInput = () => {
             type="text"
             placeholder="جستجو..."
             className="flex-grow bg-transparent outline-none"
-            value={queryValue}
+            value={decodeURI(queryValue)}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             dir={queryValue ? "auto" : "rtl"}
