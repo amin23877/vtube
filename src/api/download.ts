@@ -18,3 +18,7 @@ export const downloadSpecificQuality = (
 export const getQualities = (id: string) => {
   return get(`youtube/streams?video_id=${id}`);
 };
+
+export const downloadStatus = (data: { id: string; itag: number }) => {
+  return get(`/youtube/download-status?video_id=${data.id}&itag=${data.itag}`);
+};
