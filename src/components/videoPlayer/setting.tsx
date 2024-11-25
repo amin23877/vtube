@@ -2,6 +2,8 @@ import Image from "next/image";
 import settingIcon from "@/assets/videoPlayer/setting.svg";
 import { IDownloadResponse } from "@/app/types";
 import { Dispatch, SetStateAction, useState } from "react";
+import { downloadSpecificQuality } from "@/api/download";
+import Loading from "../Loading";
 
 type IQualities = { resolution: string; itags: number[] };
 
@@ -11,12 +13,16 @@ export default function Setting({
   button,
   itag,
   id,
+  setIsLoading,
+  isLoading,
 }: {
   data: IDownloadResponse[];
   setItag: Dispatch<SetStateAction<number>>;
   button: string;
   itag?: number;
   id: string;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  isLoading: boolean;
 }) {
   const [popup, setPopup] = useState(false);
 
@@ -46,7 +52,14 @@ export default function Setting({
   });
 
   const handleChangeResolution = async (quality: IQualities) => {
-    // downloadForServer(id,
+    setIsLoading(true);
+    downloadSpecificQuality(id, false, quality.itags[0])
+      .then((resp) => {
+        setItag(resp.itag);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -81,7 +94,11 @@ export default function Setting({
         ))}
       </div>
       <button className={button}>
-        <Image src={settingIcon} alt="setting-icon" />
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <Image src={settingIcon} alt="setting-icon" />
+        )}
       </button>
     </div>
   );

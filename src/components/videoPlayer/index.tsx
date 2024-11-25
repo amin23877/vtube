@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
-import { getQualities } from "@/api/download";
+import { downloadSpecificQuality, getQualities } from "@/api/download";
 import Image from "next/image";
 
 import yellowPlayIcon from "@/assets/videoPlayer/yellow-play.svg";
@@ -28,6 +28,9 @@ export default function VideoPlayer({ id, poster, defaultITag }: IVideoPlayer) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [itag, setItag] = useState<number>(defaultITag);
+  const [audioItag, setAudioItag] = useState<number>(defaultITag);
+
+  const [isLoadingNewRes, setIsLoadingNewRes] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [playbackState, setPlaybackState] = useState<
     "playing" | "paused" | "loading"
@@ -182,6 +185,12 @@ export default function VideoPlayer({ id, poster, defaultITag }: IVideoPlayer) {
   const button =
     "p-2 rounded-full hover:bg-opacity-15 transition-all duration-300 hover:bg-gray-100";
 
+  useEffect(() => {
+    downloadSpecificQuality(id, true).then((data) => {
+      setAudioItag(data.itag);
+    });
+  }, [id]);
+
   return (
     <div
       dir="ltr"
@@ -214,7 +223,7 @@ export default function VideoPlayer({ id, poster, defaultITag }: IVideoPlayer) {
           src={`${
             process.env.NEXT_PUBLIC_HOST
           }youtube/video-stream?video_id=${id}&media_type=AUDIO${
-            itag ? "&itag=" + itag : ""
+            itag ? "&itag=" + audioItag : ""
           }`}
         />
         <div className="absolute inset-0 flex items-center justify-center">
@@ -278,6 +287,8 @@ export default function VideoPlayer({ id, poster, defaultITag }: IVideoPlayer) {
                 data={data}
                 setItag={setItag}
                 id={id}
+                setIsLoading={setIsLoadingNewRes}
+                isLoading={isLoadingNewRes}
               />
               <Volume
                 handleVolumeChange={handleVolumeChange}
