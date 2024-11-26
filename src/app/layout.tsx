@@ -1,8 +1,9 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import AppBar from "@/components/header/AppBar";
-
+import React, { Suspense } from "react";
 import type { Metadata } from "next";
+import Loading from "./loading";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,7 +30,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
-        <AppBar>{children}</AppBar>
+        <AppBar>
+          <Suspense fallback={<Loading />}>{children}</Suspense>
+        </AppBar>
       </body>
     </html>
   );

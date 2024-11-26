@@ -113,7 +113,7 @@ const SearchInput = ({ md }: { md: boolean }) => {
   return (
     <div className="relative w-full max-w-screen-sm min-h-[50px]">
       {/* Search Input */}
-      <div className="absolute z-[2] w-full bg-[#2F3136] rounded-md border border-[#808184]">
+      <div className="absolute z-[4] w-full bg-[#2F3136] rounded-md border border-[#808184]">
         <div className={`py-3 flex items-center gap-4 ${md ? "px-4" : "px-8"}`}>
           <Image src={searchIcon} alt="search-icon" />
           <input

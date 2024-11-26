@@ -62,11 +62,11 @@ export default function AppBar({ children }: { children: ReactNode }) {
       }}
     >
       <div
-        className={`pt-10 max-h-screen overflow-auto sticky -top-10 z-[1] transition-all duration-200`}
+        className={`pt-10 max-h-screen sticky -top-10 z-[1] transition-all duration-200`}
       >
         <div
           className={`${
-            sm ? "mx-8" : "mx-10"
+            sm ? "mx-4" : "mx-10"
           } bg-gray-400 bg-opacity-[0.10] shadowBox ${
             mode ? "" : "rounded-t-3xl"
           }`}
@@ -139,7 +139,7 @@ export default function AppBar({ children }: { children: ReactNode }) {
       </div>
       <div
         className={`${
-          sm ? "m-8" : "m-10"
+          sm ? "m-4" : "m-10"
         } mt-0 rounded-b-3xl overflow-hidden bg-gray-400 bg-opacity-10`}
       >
         <div className="shadowBox">{children}</div>

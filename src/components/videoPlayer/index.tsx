@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import useSWR from "swr";
@@ -104,12 +105,52 @@ export default function VideoPlayer({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
+
+    const container = containerRef.current;
+
+    if (!container) {
+      console.error("Container reference is missing.");
+      return;
+    }
+
     if (!document.fullscreenElement) {
-      containerRef.current?.requestFullscreen();
-      setFullScreen(true);
+      const requestFullScreen =
+        container.requestFullscreen ||
+        (container as any).webkitRequestFullscreen ||
+        (container as any).mozRequestFullScreen ||
+        (container as any).msRequestFullscreen;
+
+      if (requestFullScreen) {
+        requestFullScreen
+          .call(container)
+          .then(() => {
+            setFullScreen(true);
+          })
+          .catch((err) => {
+            console.error("Error entering fullscreen:", err);
+          });
+      } else {
+        console.error("Fullscreen API is not supported on this device.");
+      }
     } else {
-      document.exitFullscreen();
-      setFullScreen(false);
+      const exitFullScreen =
+        document.exitFullscreen ||
+        (document as any).webkitExitFullscreen ||
+        (document as any).mozCancelFullScreen ||
+        (document as any).msExitFullscreen;
+
+      if (exitFullScreen) {
+        exitFullScreen
+          .call(document)
+          .then(() => {
+            setFullScreen(false);
+          })
+          .catch((err) => {
+            console.error("Error exiting fullscreen:", err);
+          });
+      } else {
+        console.error("Fullscreen exit API is not supported on this device.");
+      }
     }
   };
 
@@ -226,6 +267,34 @@ export default function VideoPlayer({
     };
   }, [isLoadingNewRes, progress, playbackState]);
 
+  const handleFullscreenChange = () => {
+    setFullScreen(!!document.fullscreenElement);
+  };
+
+  // Attach fullscreenchange event listener
+  useEffect(() => {
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange); // Safari
+    document.addEventListener("mozfullscreenchange", handleFullscreenChange); // Firefox
+    document.addEventListener("MSFullscreenChange", handleFullscreenChange); // IE/Edge
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        handleFullscreenChange
+      );
+      document.removeEventListener(
+        "mozfullscreenchange",
+        handleFullscreenChange
+      );
+      document.removeEventListener(
+        "MSFullscreenChange",
+        handleFullscreenChange
+      );
+    };
+  }, []);
+
   const button =
     "p-2 rounded-full hover:bg-opacity-15 transition-all duration-300 hover:bg-gray-100";
 
@@ -236,11 +305,15 @@ export default function VideoPlayer({
       className="rounded-3xl relative w-full h-fit bg-black overflow-hidden dir"
       style={{
         aspectRatio: "16/9",
-        height: fullScreen || md ? "auto" : "calc(100vh - 100px - 2.5rem)",
+        height: fullScreen
+          ? "100vh"
+          : md
+          ? "auto"
+          : "calc(100vh - 100px - 2.5rem)",
       }}
       onClick={playbackState === "paused" ? handlePlay : handlePause}
     >
-      <div className="relative rounded-lg overflow-hidden">
+      <div className="relative rounded-lg overflow-hidden h-full">
         <video
           poster={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${poster}`}
           style={{
