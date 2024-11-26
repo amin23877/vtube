@@ -9,12 +9,6 @@ export type IMovie = {
   createdAt: string;
 };
 
-export type ISuggestion = {
-  title: string;
-  image: string | StaticImport;
-  movies: IMovie[];
-};
-
 export type IVideo = {
   channel_username: string;
   badge: string | null;

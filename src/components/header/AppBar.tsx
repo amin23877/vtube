@@ -14,24 +14,24 @@ export default function AppBar({ children }: { children: ReactNode }) {
   const [display, setDisplay] = useState(pathname === "/" ? false : true);
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 50) {
-  //       setMode(true);
-  //       setTimeout(() => setDisplay(true), 200);
-  //     }
-  //   };
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setMode(true);
+        setTimeout(() => setDisplay(true), 200);
+      }
+    };
 
-  //   handleScroll();
+    handleScroll();
 
-  //   if (pathname === "/") {
-  //     window.addEventListener("scroll", handleScroll);
-  //     return () => window.removeEventListener("scroll", handleScroll);
-  //   } else {
-  //     setMode(true);
-  //     setTimeout(() => setDisplay(true), 200);
-  //   }
-  // }, [pathname, mode]);
+    if (pathname === "/") {
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    } else {
+      setMode(true);
+      setTimeout(() => setDisplay(true), 200);
+    }
+  }, [pathname, mode]);
 
   useEffect(() => {
     if (pathname === "/") {
@@ -55,7 +55,7 @@ export default function AppBar({ children }: { children: ReactNode }) {
     >
       <div
         className={`transition-all duration-200 sticky top-0 z-[1] m-10 mb-0 bg-gray-400 bg-opacity-[0.10] shadowBox ${
-          mode ? "" : "rounded-3xl"
+          mode ? "" : "rounded-t-3xl"
         }`}
       >
         <div
@@ -89,7 +89,7 @@ export default function AppBar({ children }: { children: ReactNode }) {
           </div>
           <PremiumLoginBox display={display} />
         </div>
-        <div
+        {/* <div
           className={`transition-all duration-200 flex items-center gap-6 flex-col  ${
             display ? "hidden" : ""
           } ${
@@ -108,7 +108,7 @@ export default function AppBar({ children }: { children: ReactNode }) {
             مرجع تمامی ویدیو‌های یوتویوب
           </div>
           <SearchInput />
-        </div>
+        </div> */}
       </div>
       <div className="m-10 mt-0 rounded-b-3xl overflow-hidden bg-gray-400 bg-opacity-10">
         <div className="shadowBox">{children}</div>
