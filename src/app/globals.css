@@ -3,10 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --custom-gray: #2F3136;
-  --yellow: #F1D815;
+  /* --background: #ffffff;
+  --foreground: #171717; */
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --custom-gray: #2f3136;
+  --yellow: #f1d815;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,7 +24,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-
 input[type="range"] {
   /* appearance: none;
   -webkit-appearance: none;
@@ -34,7 +35,7 @@ input[type="range"] {
   padding: 0;
   margin: 0;
   cursor: pointer;
-  accent-color: #F1D815;
+  accent-color: #f1d815;
   border: 0;
   transition: width 0.2s linear, opacity 0.1s linear;
 }
@@ -48,7 +49,7 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   background: white;
   cursor: pointer;
-  transition: background .15s ease-in-out;
+  transition: background 0.15s ease-in-out;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
@@ -60,9 +61,11 @@ input[type="range"]::-webkit-slider-thumb:active {
 }
 
 .controls-linear-gradient {
-  background: linear-gradient(180deg,
-      rgba(61, 61, 61, 0) 0%,
-      rgba(3, 3, 3, 0.9) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(61, 61, 61, 0) 0%,
+    rgba(3, 3, 3, 0.9) 100%
+  );
 }
 
 .group:hover .opacity-0 {
@@ -98,7 +101,7 @@ input[type="range"]::-webkit-slider-thumb:active {
 }
 
 .shadowBox {
-  backdrop-filter: blur(40px);
+  backdrop-filter: blur(5px);
 }
 
 .swiper-slide {

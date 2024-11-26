@@ -4,6 +4,7 @@ import { search } from "@/api/list";
 import { ISearch, IVideo } from "@/app/types";
 import SearchVideoItem from "@/components/SearchVideoItem";
 import Link from "next/link";
+import Loading from "@/components/Loading";
 
 export default function Search({
   query,
@@ -59,7 +60,11 @@ export default function Search({
           );
         })}
       </div>
-      {isLoading && <div className=" py-4 loader  mr-auto ml-auto"></div>}
+      {isLoading && (
+        <div className="relative w-[30px] h-[25px] mx-auto my-2">
+          <Loading />
+        </div>
+      )}
     </div>
   );
 }

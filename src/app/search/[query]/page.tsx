@@ -20,7 +20,6 @@ export default async function SearchApi({ params }: IParams) {
     .catch((err) => {
       error = err;
     });
-  console.log(query, data, error);
   if (error) return notFound();
   return <Search query={query} first_data={data} />;
 }

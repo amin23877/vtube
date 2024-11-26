@@ -5,9 +5,11 @@ import searchIcon from "@/assets/search.svg";
 import Image from "next/image";
 import useSWR from "swr";
 import { search } from "@/api/list";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 
 const SearchInput = () => {
+  const pathname = usePathname();
+
   const { query } = useParams();
   const [queryValue, setQueryValue] = useState<string>((query as string) || "");
   const [delayedValue, setDelayedValue] = useState(query || "");
@@ -18,6 +20,13 @@ const SearchInput = () => {
   const results = data?.top_related_searchs || [];
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (pathname === "/") {
+      setQueryValue("");
+      setDelayedValue("");
+    }
+  }, [pathname]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (results?.length > 0) {
