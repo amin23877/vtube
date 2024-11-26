@@ -12,10 +12,12 @@ type IVideoPlayer = {
   itag: number;
   setItag: Dispatch<SetStateAction<number>>;
   audioItag: number;
+  md: boolean;
 };
 
 export default function VideoPlayer({
   id,
+  md,
   poster,
   itag,
   setItag,
@@ -234,7 +236,7 @@ export default function VideoPlayer({
       className="rounded-3xl relative w-full h-fit bg-black overflow-hidden dir"
       style={{
         aspectRatio: "16/9",
-        height: fullScreen ? "auto" : "calc(100vh - 100px - 2.5rem)",
+        height: fullScreen || md ? "auto" : "calc(100vh - 100px - 2.5rem)",
       }}
       onClick={playbackState === "paused" ? handlePlay : handlePause}
     >
@@ -243,7 +245,7 @@ export default function VideoPlayer({
           poster={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${poster}`}
           style={{
             aspectRatio: "16/9",
-            height: fullScreen ? "auto" : "calc(100vh - 100px - 2.5rem)",
+            height: fullScreen || md ? "auto" : "calc(100vh - 100px - 2.5rem)",
           }}
           ref={videoRef}
           className="w-full rounded-lg"

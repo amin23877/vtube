@@ -13,6 +13,19 @@ export default function AppBar({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState(pathname === "/" ? false : true);
   const [display, setDisplay] = useState(pathname === "/" ? false : true);
   const router = useRouter();
+  const [md, setMd] = useState<boolean>(false);
+  const [sm, setSm] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setMd(window.matchMedia("(max-width: 1120px)").matches);
+      setSm(window.matchMedia("(max-width: 650px)").matches);
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize); // Listen for window resize events
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,13 +37,8 @@ export default function AppBar({ children }: { children: ReactNode }) {
 
     handleScroll();
 
-    if (pathname === "/") {
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    } else {
-      setMode(true);
-      setTimeout(() => setDisplay(true), 200);
-    }
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [pathname, mode]);
 
   useEffect(() => {
@@ -54,42 +62,60 @@ export default function AppBar({ children }: { children: ReactNode }) {
       }}
     >
       <div
-        className={`transition-all duration-200 sticky top-0 z-[1] m-10 mb-0 bg-gray-400 bg-opacity-[0.10] shadowBox ${
-          mode ? "" : "rounded-t-3xl"
-        }`}
+        className={`pt-10 max-h-screen overflow-auto sticky -top-10 z-[1] transition-all duration-200`}
       >
         <div
-          className={`flex items-center ${
-            mode ? "justify-evenly bg-[#191A1B]" : "justify-end"
+          className={`${
+            sm ? "mx-8" : "mx-10"
+          } bg-gray-400 bg-opacity-[0.10] shadowBox ${
+            mode ? "" : "rounded-t-3xl"
           }`}
         >
           <div
-            onClick={() => router.push("/")}
-            className={`cursor-pointer ${mode ? "" : "hidden"} ${
-              display
-                ? "opacity-100 translate-x-0 mt-4"
-                : "opacity-0 translate-x-[-20px] mt-8"
-            } mb-4 mx-[52px] min-w-[116px] transition-all duration-200`}
+            className={`flex items-center ${
+              mode
+                ? sm
+                  ? "justify-between bg-[#191A1B]"
+                  : "justify-evenly bg-[#191A1B]"
+                : "justify-end"
+            }`}
           >
-            <Image
-              className="w-[116px]"
-              src={logo}
-              width={116}
-              alt="vtube-logo"
-            />
+            <div
+              onClick={() => router.push("/")}
+              className={`cursor-pointer ${mode ? "" : "hidden"} ${
+                display
+                  ? "opacity-100 translate-x-0 mt-4"
+                  : "opacity-0 translate-x-[-20px] mt-8"
+              } mb-4 ${
+                md ? "mx-[16px]" : "mx-[52px]"
+              } min-w-[116px] transition-all duration-200`}
+            >
+              <Image
+                className="w-[116px]"
+                src={logo}
+                width={116}
+                alt="vtube-logo"
+              />
+            </div>
+            {!sm && (
+              <div
+                className={`${mode ? "" : "hidden"} ${
+                  display
+                    ? "opacity-100 translate-x-0"
+                    : "opacity-0 translate-x-[-20px] mt-2"
+                }mt-[15px] w-full transition-all duration-200`}
+              >
+                <SearchInput md={md} />
+              </div>
+            )}
+            <PremiumLoginBox display={display} md={md} />
           </div>
-          <div
-            className={`${mode ? "" : "hidden"} ${
-              display
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 translate-x-[-20px] mt-2"
-            }mt-[15px] w-full transition-all duration-200`}
-          >
-            <SearchInput />
-          </div>
-          <PremiumLoginBox display={display} />
-        </div>
-        {/* <div
+          {pathname !== "/" && sm && (
+            <div className="px-4 pb-4 bg-[#191A1B]">
+              <SearchInput md={md} />
+            </div>
+          )}
+          {/* <div
           className={`transition-all duration-200 flex items-center gap-6 flex-col  ${
             display ? "hidden" : ""
           } ${
@@ -109,8 +135,13 @@ export default function AppBar({ children }: { children: ReactNode }) {
           </div>
           <SearchInput />
         </div> */}
+        </div>
       </div>
-      <div className="m-10 mt-0 rounded-b-3xl overflow-hidden bg-gray-400 bg-opacity-10">
+      <div
+        className={`${
+          sm ? "m-8" : "m-10"
+        } mt-0 rounded-b-3xl overflow-hidden bg-gray-400 bg-opacity-10`}
+      >
         <div className="shadowBox">{children}</div>
       </div>
     </div>

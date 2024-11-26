@@ -4,9 +4,9 @@ import Search from "./search";
 import { notFound } from "next/navigation";
 
 type IParams = {
-  params: {
+  params: Promise<{
     query: string;
-  };
+  }>;
 };
 
 export default async function SearchApi({ params }: IParams) {

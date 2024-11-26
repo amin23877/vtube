@@ -3,7 +3,13 @@
 import { IVideo } from "@/app/types";
 import Image from "next/image";
 
-export default function SearchVideoItem({ video }: { video: IVideo }) {
+export default function SearchVideoItem({
+  video,
+  sm,
+}: {
+  video: IVideo;
+  sm: boolean;
+}) {
   const translateList = [
     { n: "seconds", t: "ثانیه" },
     { n: "second", t: "ثانیه" },
@@ -31,7 +37,7 @@ export default function SearchVideoItem({ video }: { video: IVideo }) {
   };
 
   return (
-    <div className="min-w-[320px] max-w-sm">
+    <div className={`${sm ? "w-full" : "min-w-[320px] max-w-sm"}`}>
       <Image
         style={{ aspectRatio: "16/9" }}
         src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${video.thumbnail_url}`}
@@ -40,8 +46,26 @@ export default function SearchVideoItem({ video }: { video: IVideo }) {
         height={270}
         className="w-full h-auto object-cover rounded-[12px]"
       />
-      <h3 className="mt-2 text-lg font-semibold">{video.title}</h3>
-      <p className="text-sm text-[#808184]">{video.channel_username}</p>
+      <h3
+        className="w-full mt-2 text-lg font-semibold"
+        style={{
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "clip",
+        }}
+      >
+        {video.title}
+      </h3>
+      <p
+        className="w-full text-sm text-[#808184]"
+        style={{
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "clip",
+        }}
+      >
+        {video.channel_username}
+      </p>
       <span className="text-[#808184]">
         {video.view_count.replace("views", "بازدید")} .{" "}
         {translate(video.publish_date || "")}

@@ -17,6 +17,18 @@ export default function Search({
   const [cursor, setCursor] = useState<string>(first_data.cursor || "");
   const [isLoading, setLoading] = useState(false);
 
+  const [sm, setSm] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setSm(window.matchMedia("(max-width: 650px)").matches);
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize); // Listen for window resize events
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const loadingRef = useRef(false);
   const handleScroll = useCallback(() => {
     if (loadingRef.current || isLoading) return;
@@ -52,11 +64,13 @@ export default function Search({
       <div className="flex flex-wrap sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 justify-start">
         {videos.map((video, index) => {
           return (
-            <div key={index} className="flex-1 mb-8">
-              <Link href={`/video/${video.video_id}`}>
-                <SearchVideoItem video={video} />
-              </Link>
-            </div>
+            <Link
+              href={`/video/${video.video_id}`}
+              key={index}
+              className="flex-1 mb-8 w-full flex justify-center"
+            >
+              <SearchVideoItem video={video} sm={sm} />
+            </Link>
           );
         })}
       </div>

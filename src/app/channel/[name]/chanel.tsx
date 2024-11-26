@@ -2,18 +2,7 @@ import Image from "next/image";
 
 import { IChanelData } from "@/app/types";
 
-export default function Chanel({
-  badge,
-  banner,
-  channel_id,
-  channel_name,
-  description,
-  thumbnail,
-  total_subscribers,
-  total_videos,
-  total_views,
-  is_family_safe,
-}: IChanelData) {
+export default function Chanel({ banner, channel_name }: IChanelData) {
   return (
     <Image
       src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${banner}`}
