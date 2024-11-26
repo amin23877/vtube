@@ -11,7 +11,7 @@ function ChannelSummary({
   subscribersCount: string;
 }) {
   return (
-    <Link href={`/youtube/${name}`} className="flex gap-4 mt-8">
+    <Link href={`/channel/${name}`} className="flex gap-4 ">
       <Image
         src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${image}`}
         alt={name + "avatar"}

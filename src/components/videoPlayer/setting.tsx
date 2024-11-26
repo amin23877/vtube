@@ -73,7 +73,7 @@ export default function Setting({
         setPopup(!popup);
       }}
     >
-      <p className="absolute bottom-0 left-1/2 bg-[#F1D815] text-[#030303] size text-[12px] cursor-pointer">
+      <p className="absolute bottom-[2px] left-1/2 bg-[#F1D815] text-[#030303] size text-[10px] cursor-pointer rounded-[2px] px-[4px]">
         {groupedData.find((x) => x.itags.find((z) => z === itag))?.resolution}
       </p>
       <div
