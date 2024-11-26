@@ -18,15 +18,20 @@ function VideoDetails({
   audioItag,
   id,
   itag,
+  md,
 }: {
   data: IDownloadResponse;
   audioItag: number;
   id: string;
   itag: number;
+  md: boolean;
 }) {
   return (
     <>
-      <p className="py-4 text-3xl font-medium" dir="auto">
+      <p
+        className={`py-4 ${md ? "text-lg" : "text-3xl"} font-medium`}
+        dir="auto"
+      >
         {data.title}
       </p>
       <div className="flex flex-wrap gap-4 justify-between items-center">

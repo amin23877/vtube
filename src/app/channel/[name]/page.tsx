@@ -3,9 +3,9 @@ import Chanel from "./chanel";
 import { IChanelData } from "@/app/types";
 
 type IParams = {
-  params: {
+  params: Promise<{
     name: string;
-  };
+  }>;
 };
 
 export default async function Youtube({ params }: IParams) {

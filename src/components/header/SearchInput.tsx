@@ -7,7 +7,7 @@ import useSWR from "swr";
 import { search } from "@/api/list";
 import { useParams, usePathname, useRouter } from "next/navigation";
 
-const SearchInput = () => {
+const SearchInput = ({ md }: { md: boolean }) => {
   const pathname = usePathname();
 
   const { query } = useParams();
@@ -114,7 +114,7 @@ const SearchInput = () => {
     <div className="relative w-full max-w-screen-sm min-h-[50px]">
       {/* Search Input */}
       <div className="absolute z-[2] w-full bg-[#2F3136] rounded-md border border-[#808184]">
-        <div className="py-3 flex items-center gap-4 px-8">
+        <div className={`py-3 flex items-center gap-4 ${md ? "px-4" : "px-8"}`}>
           <Image src={searchIcon} alt="search-icon" />
           <input
             ref={inputRef}
