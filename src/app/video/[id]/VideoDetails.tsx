@@ -15,15 +15,15 @@ import VideoDescription from "@/components/pages/Video/Description";
 
 function VideoDetails({
   data,
-  audioItag,
+  audioUrl,
+  videoUrl,
   id,
-  itag,
   md,
 }: {
   data: IDownloadResponse;
-  audioItag: number;
+  audioUrl: string;
+  videoUrl: string;
   id: string;
-  itag: number;
   md: boolean;
 }) {
   return (
@@ -44,8 +44,8 @@ function VideoDetails({
           <CountsBadge count={data.like_count} icon={likeIcon} />
           <CountsBadge count={data.view_count} icon={viewIcon} />
           <CountsBadge count={data.comment_count} icon={commentIcon} />
-          <DownloadAudio audioItag={audioItag} id={id} />
-          <DownloadVideo itag={itag} id={id} />
+          <DownloadAudio audioUrl={audioUrl} id={id} />
+          <DownloadVideo videoUrl={videoUrl} id={id} />
         </div>
       </div>
       {<VideoDescription desc={data.description} />}

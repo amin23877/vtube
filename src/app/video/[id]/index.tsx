@@ -2,13 +2,27 @@
 
 import VideoPlayer from "@/components/videoPlayer";
 import VideoDetails from "./VideoDetails";
-import { IDownloadResponse } from "@/app/types";
-import { useEffect, useState } from "react";
-import { downloadSpecificQuality } from "@/api/download";
+import { IDownloadResponse, IStreams } from "@/app/types";
+import { useEffect, useMemo, useState } from "react";
 
-function VideoPage({ id, data }: { id: string; data: IDownloadResponse }) {
-  const [itag, setItag] = useState<number>(data.itag);
-  const [audioItag, setAudioItag] = useState<number>(data.itag);
+function VideoPage({
+  id,
+  data,
+  streams,
+}: {
+  id: string;
+  data: IDownloadResponse;
+  streams: IStreams[];
+}) {
+  const audioUrl = useMemo(() => {
+    return streams.filter((i) => i.type === "audio")[0].url;
+  }, [streams]);
+
+  const defaultVideoUrl = useMemo(() => {
+    return streams.filter((i) => i.video_codec && i.audio_codec)[0].url;
+  }, [streams]);
+
+  const [videoUrl, setVideoUrl] = useState(defaultVideoUrl);
   const [md, setMd] = useState<boolean>(false);
 
   useEffect(() => {
@@ -21,28 +35,23 @@ function VideoPage({ id, data }: { id: string; data: IDownloadResponse }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    downloadSpecificQuality(id, true).then((resp) => {
-      setAudioItag(resp.itag);
-    });
-  }, [id, setAudioItag]);
-
   return (
     <div className={md ? "px-4" : "px-10"}>
       <VideoPlayer
         md={md}
         id={id}
         poster={data.thumbnail_url}
-        itag={itag}
-        setItag={setItag}
-        audioItag={audioItag}
+        audioUrl={audioUrl}
+        videoUrl={videoUrl}
+        setVideoUrl={setVideoUrl}
+        streams={streams}
       />
       <VideoDetails
         md={md}
         data={data}
-        audioItag={audioItag}
         id={id}
-        itag={itag}
+        videoUrl={videoUrl}
+        audioUrl={audioUrl}
       />
     </div>
   );
