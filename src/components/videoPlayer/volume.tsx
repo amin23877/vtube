@@ -4,24 +4,17 @@ import volumeLowIcon from "@/assets/videoPlayer/volume-low.svg";
 import noVolumeIcon from "@/assets/videoPlayer/no-volume.svg";
 
 export default function Volume({
-  handleVolumeToggle,
   handleVolumeChange,
   button,
   volume,
 }: {
-  handleVolumeToggle: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => void;
   handleVolumeChange: (e: number) => void;
   button: string;
   volume: number;
 }) {
   return (
     <div className="relative group">
-      <button
-        onClick={handleVolumeToggle}
-        className={`text-white shadow-md focus:outline-none ${button}`}
-      >
+      <button className={`text-white shadow-md focus:outline-none ${button}`}>
         <Image
           src={
             volume === 0

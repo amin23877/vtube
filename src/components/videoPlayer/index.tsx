@@ -31,7 +31,6 @@ export default function VideoPlayer({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [isLoadingNewRes, setIsLoadingNewRes] = useState<boolean>(false);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
   const [playbackState, setPlaybackState] = useState<
     "playing" | "paused" | "loading"
   >("paused");
@@ -67,19 +66,6 @@ export default function VideoPlayer({
       audioRef.current?.pause();
       setPlaybackState("paused");
       setShowPlayPauseButton(true);
-    }
-  };
-
-  const handleVolumeToggle = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.stopPropagation();
-    if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
-    }
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
     }
   };
 
@@ -302,7 +288,7 @@ export default function VideoPlayer({
     <div
       dir="ltr"
       ref={containerRef}
-      className="rounded-3xl relative w-full h-fit bg-black overflow-hidden dir"
+      className="rounded-3xl relative w-full h-fit bg-black dir"
       style={{
         aspectRatio: "16/9",
         height: fullScreen
@@ -313,7 +299,7 @@ export default function VideoPlayer({
       }}
       onClick={playbackState === "paused" ? handlePlay : handlePause}
     >
-      <div className="relative rounded-lg overflow-hidden h-full">
+      <div className="relative rounded-lg h-full">
         <video
           poster={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${poster}`}
           style={{
@@ -353,7 +339,6 @@ export default function VideoPlayer({
           setCqLoading={setCqLoading}
           isLoading={isLoadingNewRes}
           handleVolumeChange={handleVolumeChange}
-          handleVolumeToggle={handleVolumeToggle}
           volume={volume}
           toggleFullScreen={toggleFullScreen}
           fullScreen={fullScreen}

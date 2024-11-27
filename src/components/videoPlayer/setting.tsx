@@ -1,9 +1,10 @@
 import Image from "next/image";
 import settingIcon from "@/assets/videoPlayer/setting.svg";
 import { IDownloadResponse } from "@/app/types";
-import { Dispatch, SetStateAction, useState } from "react";
-import { downloadSpecificQuality } from "@/api/download";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { downloadSpecificQuality, downloadStatus } from "@/api/download";
 import Loading from "../Loading";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
 
 type IQualities = { resolution: string; itags: number[] };
 
@@ -13,8 +14,8 @@ export default function Setting({
   button,
   itag,
   id,
-  setIsLoading,
   setCqLoading,
+  setIsLoading,
   isLoading,
 }: {
   data: IDownloadResponse[];
@@ -26,13 +27,15 @@ export default function Setting({
   setCqLoading: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
 }) {
-  const [popup, setPopup] = useState(false);
+  const [stop, setStop] = useState(true);
+  const [newItag, setNewItag] = useState<number>(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const groupedData = Object.values(
     data.reduce((acc, { itag, resolution }) => {
-      if (!resolution || resolution === "null") return acc; // Ignore null or undefined resolutions
+      if (!resolution || resolution === "null") return acc;
 
-      // Convert resolutions above 1080 to 'k'
       const formattedResolution =
         resolution.endsWith("p") && parseInt(resolution) > 1080
           ? `${parseInt(resolution) / 1000}k`
@@ -49,65 +52,97 @@ export default function Setting({
     }, {} as Record<string, { resolution: string; itags: number[] }>)
   ).sort((a, b) => {
     const parseRes = (res: string) =>
-      res.endsWith("k") ? parseFloat(res) * 1000 : parseInt(res); // Convert 'k' to numeric for sorting
+      res.endsWith("k") ? parseFloat(res) * 1000 : parseInt(res);
     return parseRes(a.resolution) - parseRes(b.resolution);
   });
+
+  useEffect(() => {
+    if (!stop && newItag !== 0) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+
+      intervalRef.current = setInterval(() => {
+        downloadStatus({ id, itag: newItag }).then((status_data) => {
+          if (status_data?.progress !== "0 %") {
+            setStop(true);
+            setItag(newItag);
+            setCqLoading(true);
+            if (intervalRef.current) {
+              clearInterval(intervalRef.current);
+            }
+          }
+        });
+      }, 1000);
+    }
+
+    // Cleanup the interval when the component unmounts or dependencies change
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [stop, newItag, id, setItag]);
 
   const handleChangeResolution = async (quality: IQualities) => {
     setIsLoading(true);
     downloadSpecificQuality(id, false, quality.itags[0])
       .then((resp) => {
-        setItag(resp.itag);
+        setNewItag(resp.itag);
+        setStop(false);
       })
       .finally(() => {
         setIsLoading(false);
-        setCqLoading(true);
       });
   };
 
   return (
-    <div
-      className="relative"
-      onClick={(e) => {
-        e.stopPropagation();
-        setPopup(!popup);
-      }}
-    >
-      <p className="absolute bottom-[2px] left-1/2 bg-[#F1D815] text-[#030303] size text-[10px] cursor-pointer rounded-[2px] px-[4px]">
-        {groupedData.find((x) => x.itags.find((z) => z === itag))?.resolution}
-      </p>
-      <div
-        className={`absolute bottom-full right-0 mt-2 w-48 rounded shadow-lg z-50 ${
-          popup ? "h-auto" : "h-0"
-        } transition-all duration-300 overflow-hidden`}
-      >
-        {groupedData?.map((quality: IQualities) => (
-          <p
-            key={quality.resolution}
-            className={`${
-              popup ? "" : "hidden"
-            } cursor-pointer px-4 py-2 bg-[#212B30] hover:bg-[#374556] ${
-              quality.itags.find((x) => x === itag) ? "bg-[#4B5A6C]" : ""
-            }`}
-            onClick={(e) => {
-              e.stopPropagation();
-              setPopup(false);
-              handleChangeResolution(quality);
-            }}
-          >
-            {quality.resolution}
-          </p>
-        ))}
-      </div>
-      <button className={button}>
-        {isLoading ? (
-          <div className="relative w-[30px] h-[25px]">
-            <Loading />
+    <div className="relative">
+      <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger>
+          <div className={button}>
+            {isLoading ? (
+              <div className="relative w-[30px] h-[25px]">
+                <Loading />
+              </div>
+            ) : (
+              <Image src={settingIcon} alt="setting-icon" />
+            )}
           </div>
-        ) : (
-          <Image src={settingIcon} alt="setting-icon" />
-        )}
-      </button>
+        </PopoverTrigger>
+
+        <PopoverContent>
+          <div className="bg-[#212B30] rounded shadow-lg w-48">
+            {groupedData.map((quality: IQualities) => (
+              <p
+                key={quality.resolution}
+                className={`cursor-pointer px-4 py-2 hover:bg-[#374556] ${
+                  quality.itags.find((z) =>
+                    newItag ? z === newItag : z === itag
+                  )
+                    ? "bg-[#4B5A6C]"
+                    : ""
+                }`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleChangeResolution(quality);
+                  setIsOpen(false);
+                }}
+              >
+                {quality.resolution}
+              </p>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
+      <p className="absolute bottom-[2px] left-1/2 bg-[#F1D815] text-[#030303] size text-[10px] cursor-pointer rounded-[2px] px-[4px]">
+        {
+          groupedData.find((x) =>
+            x.itags.find((z) => (newItag ? z === newItag : z === itag))
+          )?.resolution
+        }
+      </p>
     </div>
   );
 }

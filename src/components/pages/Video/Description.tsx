@@ -16,36 +16,38 @@ function VideoDescription({ desc }: { desc: string }) {
   }, [desc]);
 
   return (
-    <div className="w-full px-6 py-4 bg-custom-gray rounded-xl my-4">
-      <div className="relative">
-        <p
-          ref={descRef}
-          className={`overflow-hidden transition-all duration-300 ${
-            isExpanded ? "max-h-full" : "max-h-[4.5em]"
-          }`}
-          dir="auto"
-        >
-          {desc}
-        </p>
-        {showButton && !isExpanded && (
-          <div className="absolute bottom-0 right-0 bg-custom-gray pl-2">
-            <button
-              onClick={() => setIsExpanded(true)}
-              className="text-blue-600 hover:text-blue-800 font-semibold"
-            >
-              بیشتر...
-            </button>
-          </div>
+    <div className="py-4">
+      <div className="w-full px-6 py-4 bg-custom-gray rounded-xl">
+        <div className="relative">
+          <p
+            ref={descRef}
+            className={`overflow-hidden transition-all duration-300 ${
+              isExpanded ? "max-h-full" : "max-h-[4.5em]"
+            }`}
+            dir="auto"
+          >
+            {desc}
+          </p>
+          {showButton && !isExpanded && (
+            <div className="absolute bottom-0 right-0 bg-custom-gray pl-2">
+              <button
+                onClick={() => setIsExpanded(true)}
+                className="text-blue-600 hover:text-blue-800 font-semibold"
+              >
+                بیشتر...
+              </button>
+            </div>
+          )}
+        </div>
+        {showButton && isExpanded && (
+          <button
+            onClick={() => setIsExpanded(false)}
+            className="mt-2 text-blue-600 hover:text-blue-800 font-semibold"
+          >
+            نمایش کمتر
+          </button>
         )}
       </div>
-      {showButton && isExpanded && (
-        <button
-          onClick={() => setIsExpanded(false)}
-          className="mt-2 text-blue-600 hover:text-blue-800 font-semibold"
-        >
-          نمایش کمتر
-        </button>
-      )}
     </div>
   );
 }

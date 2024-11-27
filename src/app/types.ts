@@ -52,9 +52,6 @@ export type IControls = {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   setCqLoading: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
-  handleVolumeToggle: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => void;
   handleVolumeChange: (e: number) => void;
   volume: number;
   toggleFullScreen: (

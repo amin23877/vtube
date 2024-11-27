@@ -140,7 +140,7 @@ export default function AppBar({ children }: { children: ReactNode }) {
       <div
         className={`${
           sm ? "m-4" : "m-10"
-        } mt-0 rounded-b-3xl overflow-hidden bg-gray-400 bg-opacity-10`}
+        } mt-0 rounded-b-3xl bg-gray-400 bg-opacity-10`}
       >
         <div className="shadowBox">{children}</div>
       </div>

@@ -16,7 +16,6 @@ export default function Controls({
   setIsLoading,
   setCqLoading,
   isLoading,
-  handleVolumeToggle,
   handleVolumeChange,
   volume,
   toggleFullScreen,
@@ -45,7 +44,6 @@ export default function Controls({
           />
           <Volume
             handleVolumeChange={handleVolumeChange}
-            handleVolumeToggle={handleVolumeToggle}
             button={button}
             volume={volume}
           />
