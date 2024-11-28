@@ -9,19 +9,17 @@ export default function Controls({
   button,
   playbackState,
   handleForward,
-  data = [],
-  setItag,
-  itag,
-  id,
-  setIsLoading,
-  setCqLoading,
-  isLoading,
+
   handleVolumeChange,
   volume,
   toggleFullScreen,
   fullScreen,
   seekVideo,
   progress,
+
+  streams,
+  videoUrl,
+  setVideoUrl,
 }: IControls) {
   return (
     <div className="controls-linear-gradient absolute bottom-0 w-full rounded-lg">
@@ -33,14 +31,10 @@ export default function Controls({
         />
         <div className="flex items-center gap-2">
           <Setting
-            itag={itag}
             button={button}
-            data={data}
-            setItag={setItag}
-            id={id}
-            setIsLoading={setIsLoading}
-            setCqLoading={setCqLoading}
-            isLoading={isLoading}
+            streams={streams}
+            videoUrl={videoUrl}
+            setVideoUrl={setVideoUrl}
           />
           <Volume
             handleVolumeChange={handleVolumeChange}

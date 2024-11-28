@@ -27,10 +27,7 @@ export type ISearch = {
 };
 
 export type IDownloadResponse = {
-  itag: number;
   title: string;
-  filesize: number;
-  resolution: string;
   like_count: number;
   view_count: number;
   comment_count: string;
@@ -42,16 +39,14 @@ export type IDownloadResponse = {
 };
 
 export type IControls = {
+  videoUrl: string;
+  setVideoUrl: Dispatch<SetStateAction<string>>;
+  streams: IStreams[];
+
   button: string;
   playbackState: "playing" | "paused" | "loading";
   handleForward: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  data: IDownloadResponse[];
-  setItag: Dispatch<SetStateAction<number>>;
-  itag?: number;
-  id: string;
-  setIsLoading: Dispatch<SetStateAction<boolean>>;
-  setCqLoading: Dispatch<SetStateAction<boolean>>;
-  isLoading: boolean;
+
   handleVolumeChange: (e: number) => void;
   volume: number;
   toggleFullScreen: (
@@ -73,4 +68,13 @@ export type IChanelData = {
   total_subscribers: string;
   total_videos: string;
   total_views: number;
+};
+
+export type IStreams = {
+  url: string;
+  type: string;
+  filesize: number;
+  resolution: string;
+  audio_codec: string;
+  video_codec: string;
 };

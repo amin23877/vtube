@@ -1,36 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import useSWR from "swr";
-import { getQualities } from "@/api/download";
 
 import CenterButton from "./centerButton";
 import Controls from "./controls";
+import { IStreams } from "@/app/types";
 
 type IVideoPlayer = {
-  id: string;
   poster: string;
-  itag: number;
-  setItag: Dispatch<SetStateAction<number>>;
-  audioItag: number;
+  audioUrl: string;
+  videoUrl: string;
+  setVideoUrl: Dispatch<SetStateAction<string>>;
+  streams: IStreams[];
   md: boolean;
 };
 
 export default function VideoPlayer({
-  id,
   md,
   poster,
-  itag,
-  setItag,
-  audioItag,
+  audioUrl,
+  videoUrl,
+  setVideoUrl,
+  streams,
 }: IVideoPlayer) {
-  const { data } = useSWR(id, getQualities);
-
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [isLoadingNewRes, setIsLoadingNewRes] = useState<boolean>(false);
   const [playbackState, setPlaybackState] = useState<
     "playing" | "paused" | "loading"
   >("paused");
@@ -251,7 +247,7 @@ export default function VideoPlayer({
         );
       }
     };
-  }, [isLoadingNewRes, progress, playbackState]);
+  }, [progress, playbackState]);
 
   const handleFullscreenChange = () => {
     setFullScreen(!!document.fullscreenElement);
@@ -308,19 +304,11 @@ export default function VideoPlayer({
           }}
           ref={videoRef}
           className="w-full rounded-lg"
-          src={`${
-            process.env.NEXT_PUBLIC_HOST
-          }youtube/video-stream?video_id=${id}&media_type=VIDEO${
-            itag ? "&itag=" + itag : ""
-          }`}
+          src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-video?video_url=${videoUrl}`}
         />
         <audio
           ref={audioRef}
-          src={`${
-            process.env.NEXT_PUBLIC_HOST
-          }youtube/video-stream?video_id=${id}&media_type=AUDIO${
-            audioItag ? "&itag=" + audioItag : ""
-          }`}
+          src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-audio?audio_url=${audioUrl}`}
         />
         <CenterButton
           cqLoading={cqLoading}
@@ -328,16 +316,12 @@ export default function VideoPlayer({
           showPlayPauseButton={showPlayPauseButton}
         />
         <Controls
+          streams={streams}
+          videoUrl={videoUrl}
+          setVideoUrl={setVideoUrl}
           button={button}
           handleForward={handleForward}
           playbackState={playbackState}
-          itag={itag}
-          data={data}
-          setItag={setItag}
-          id={id}
-          setIsLoading={setIsLoadingNewRes}
-          setCqLoading={setCqLoading}
-          isLoading={isLoadingNewRes}
           handleVolumeChange={handleVolumeChange}
           volume={volume}
           toggleFullScreen={toggleFullScreen}
