@@ -27,7 +27,6 @@ export default function VideoPlayer({
   const audioRef = useRef<HTMLAudioElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [isLoadingNewRes, setIsLoadingNewRes] = useState<boolean>(false);
   const [playbackState, setPlaybackState] = useState<
     "playing" | "paused" | "loading"
   >("paused");
@@ -248,7 +247,7 @@ export default function VideoPlayer({
         );
       }
     };
-  }, [isLoadingNewRes, progress, playbackState]);
+  }, [progress, playbackState]);
 
   const handleFullscreenChange = () => {
     setFullScreen(!!document.fullscreenElement);
