@@ -39,7 +39,6 @@ function VideoPage({
     <div className={md ? "px-4" : "px-10"}>
       <VideoPlayer
         md={md}
-        id={id}
         poster={data.thumbnail_url}
         audioUrl={audioUrl}
         videoUrl={videoUrl}

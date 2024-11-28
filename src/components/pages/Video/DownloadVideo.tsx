@@ -5,7 +5,7 @@ import downloadHoverIcon from "@/assets/actions/downloadHover.svg";
 
 function DownloadVideo({ videoUrl, id }: { videoUrl: string; id: string }) {
   const handleDownloadVideo = () => {
-    const downloadLink = `${process.env.NEXT_PUBLIC_HOST}/youtube/proxy-audio?video_url=${videoUrl}`;
+    const downloadLink = `${process.env.NEXT_PUBLIC_HOST}youtube/proxy-audio?video_url=${videoUrl}`;
     const link = document.createElement("a");
     link.href = downloadLink;
     link.download = `video_${id}`;

@@ -7,7 +7,6 @@ import Controls from "./controls";
 import { IStreams } from "@/app/types";
 
 type IVideoPlayer = {
-  id: string;
   poster: string;
   audioUrl: string;
   videoUrl: string;
@@ -17,7 +16,6 @@ type IVideoPlayer = {
 };
 
 export default function VideoPlayer({
-  id,
   md,
   poster,
   audioUrl,
@@ -307,11 +305,11 @@ export default function VideoPlayer({
           }}
           ref={videoRef}
           className="w-full rounded-lg"
-          src={`${process.env.NEXT_PUBLIC_HOST}/youtube/proxy-audio?video_url=${videoUrl}`}
+          src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-video?video_url=${videoUrl}`}
         />
         <audio
           ref={audioRef}
-          src={`${process.env.NEXT_PUBLIC_HOST}/youtube/proxy-audio?audio_url=${audioUrl}`}
+          src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-audio?audio_url=${audioUrl}`}
         />
         <CenterButton
           cqLoading={cqLoading}
@@ -325,10 +323,6 @@ export default function VideoPlayer({
           button={button}
           handleForward={handleForward}
           playbackState={playbackState}
-          id={id}
-          setIsLoading={setIsLoadingNewRes}
-          setCqLoading={setCqLoading}
-          isLoading={isLoadingNewRes}
           handleVolumeChange={handleVolumeChange}
           volume={volume}
           toggleFullScreen={toggleFullScreen}

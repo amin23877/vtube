@@ -47,10 +47,6 @@ export type IControls = {
   playbackState: "playing" | "paused" | "loading";
   handleForward: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 
-  id: string;
-  setIsLoading: Dispatch<SetStateAction<boolean>>;
-  setCqLoading: Dispatch<SetStateAction<boolean>>;
-  isLoading: boolean;
   handleVolumeChange: (e: number) => void;
   volume: number;
   toggleFullScreen: (
