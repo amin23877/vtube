@@ -304,11 +304,13 @@ export default function VideoPlayer({
           }}
           ref={videoRef}
           className="w-full rounded-lg"
-          src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-video?video_url=${videoUrl}`}
+          // src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-video?video_url=${videoUrl}`}
+          src={`/api/proxy?url=${encodeURIComponent(videoUrl)}`}
         />
         <audio
           ref={audioRef}
-          src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-audio?audio_url=${audioUrl}`}
+          // src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-audio?audio_url=${audioUrl}`}
+          src={`/api/proxy?url=${encodeURIComponent(audioUrl)}`}
         />
         <CenterButton
           cqLoading={cqLoading}
