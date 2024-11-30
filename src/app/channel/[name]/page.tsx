@@ -1,5 +1,5 @@
 import { channel_data } from "@/api/list";
-import Chanel from "./chanel";
+import Chanel from "./channel";
 import { IChanelData } from "@/app/types";
 
 type IParams = {
