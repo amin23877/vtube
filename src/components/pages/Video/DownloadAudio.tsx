@@ -5,7 +5,9 @@ import musicHoverIcon from "@/assets/actions/musicHover.svg";
 
 function DownloadAudio({ audioUrl, id }: { audioUrl: string; id: string }) {
   const handleDownloadAudio = () => {
-    const downloadLink = `${process.env.NEXT_PUBLIC_HOST}youtube/proxy-audio?audio_url=${audioUrl}`;
+    const downloadLink = `${
+      process.env.NEXT_PUBLIC_HOST
+    }youtube/proxy-audio?audio_url=${encodeURIComponent(audioUrl)}`;
     const link = document.createElement("a");
     link.href = downloadLink;
     link.download = `video_${id}`;
