@@ -38,9 +38,9 @@ export default function VideoPlayer({
 
   const handlePlay = (e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e?.stopPropagation();
-    if (videoRef.current) {
+    if (videoRef.current && audioRef.current) {
       setPlaybackState("loading");
-      Promise.all([videoRef.current?.play()])
+      Promise.all([videoRef.current?.play(), audioRef.current.play()])
         .then(() => {
           setPlaybackState("playing");
           setShowPlayPauseButton(true);
@@ -297,6 +297,7 @@ export default function VideoPlayer({
     >
       <div className="relative rounded-lg h-full">
         <video
+          muted
           poster={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${poster}`}
           style={{
             aspectRatio: "16/9",
