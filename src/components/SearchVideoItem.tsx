@@ -37,7 +37,9 @@ export default function SearchVideoItem({
   };
 
   return (
-    <div className={`${sm ? "w-full" : "min-w-[320px] max-w-sm"}`}>
+    <div
+      className={`${sm ? "min-w-[320px] w-full" : "min-w-[320px] max-w-sm"}`}
+    >
       <Image
         style={{ aspectRatio: "16/9" }}
         src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${video.thumbnail_url}`}
