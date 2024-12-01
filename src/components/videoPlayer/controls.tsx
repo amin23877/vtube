@@ -31,6 +31,7 @@ export default function Controls({
         />
         <div className="flex items-center gap-2">
           <Setting
+            fullScreen={fullScreen}
             button={button}
             streams={streams}
             videoUrl={videoUrl}

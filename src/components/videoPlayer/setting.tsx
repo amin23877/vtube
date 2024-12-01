@@ -8,11 +8,13 @@ type IQualities = { resolution: string; urls: { type: string; url: string }[] };
 
 export default function Setting({
   button,
+  fullScreen,
   setVideoUrl,
   videoUrl,
   streams,
 }: {
   button: string;
+  fullScreen: boolean;
   videoUrl: string;
   setVideoUrl: Dispatch<SetStateAction<string>>;
   streams: IStreams[];
@@ -49,7 +51,15 @@ export default function Setting({
 
   return (
     <div className="relative">
-      <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
+      <Popover
+        portalContainer={
+          fullScreen && document.fullscreenElement
+            ? document.fullscreenElement
+            : document.body
+        }
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+      >
         <PopoverTrigger>
           <div className={button}>
             <Image src={settingIcon} alt="setting-icon" />
