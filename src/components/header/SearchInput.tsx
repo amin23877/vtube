@@ -28,6 +28,11 @@ const SearchInput = ({ md }: { md: boolean }) => {
     }
   }, [pathname]);
 
+  const submitSearch = () => {
+    router.push(`/search/${queryValue}`);
+    inputRef.current?.blur();
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (results?.length > 0) {
       if (e.key === "ArrowDown") {
@@ -52,15 +57,13 @@ const SearchInput = ({ md }: { md: boolean }) => {
           setQueryValue(select);
           inputRef.current?.blur();
         } else {
-          router.push(`/search/${queryValue}`);
-          inputRef.current?.blur();
+          submitSearch();
         }
       }
     } else {
       if (e.key === "Enter" && queryValue.trim() !== "") {
         e.preventDefault();
-        router.push(`/search/${queryValue}`);
-        inputRef.current?.blur();
+        submitSearch();
       }
     }
   };
@@ -115,7 +118,9 @@ const SearchInput = ({ md }: { md: boolean }) => {
       {/* Search Input */}
       <div className="absolute z-[4] w-full bg-[#2F3136] rounded-md border border-[#808184]">
         <div className={`py-3 flex items-center gap-4 ${md ? "px-4" : "px-8"}`}>
-          <Image src={searchIcon} alt="search-icon" />
+          <div onClick={submitSearch} className="cursor-pointer">
+            <Image src={searchIcon} alt="search-icon" />
+          </div>
           <input
             ref={inputRef}
             onFocus={handleFocus}
@@ -144,7 +149,7 @@ const SearchInput = ({ md }: { md: boolean }) => {
                   setQueryValue(item);
                 }}
               >
-                <div className="w-6 h-6 flex items-center justify-center">
+                <div className="w-6 h-6 flex items-center justify-center ">
                   <Image
                     src={searchIcon}
                     alt="search-icon-small"

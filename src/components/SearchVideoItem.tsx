@@ -31,7 +31,7 @@ export default function SearchVideoItem({
   const translate = (name: string) => {
     let theName = name;
     translateList.map((x) => {
-      theName = theName.replace(x.n, x.t);
+      theName = theName?.replace(x.n, x.t);
     });
     return theName;
   };
@@ -69,7 +69,7 @@ export default function SearchVideoItem({
         {video.channel_username}
       </p>
       <span className="text-[#808184]">
-        {video.view_count.replace("views", "بازدید")} .{" "}
+        {video.view_count?.replace("views", "بازدید")} .{" "}
         {translate(video.publish_date || "")}
       </span>
     </div>
