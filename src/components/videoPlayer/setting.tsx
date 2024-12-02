@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import settingIcon from "@/assets/videoPlayer/setting.svg";
 import { IStreams } from "@/app/types";
@@ -16,6 +18,7 @@ export default function Setting({
   setVideoSize,
   videoUrl,
   streams,
+  handleChangesrc,
 }: {
   button: string;
   fullScreen: boolean;
@@ -23,12 +26,14 @@ export default function Setting({
   setVideoUrl: Dispatch<SetStateAction<string>>;
   setVideoSize: Dispatch<SetStateAction<number>>;
   streams: IStreams[];
+  handleChangesrc: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const groupedData = Object.values(
     streams.reduce((acc, { type, url, resolution, filesize }) => {
       if (!resolution || resolution === "null") return acc;
+      if (parseInt(resolution) > 1080) return acc;
 
       const formattedResolution =
         resolution.endsWith("p") && parseInt(resolution) > 1080
@@ -51,6 +56,7 @@ export default function Setting({
   });
 
   const handleChangeResolution = async (quality: IQualities) => {
+    handleChangesrc();
     setVideoUrl(quality.urls[0].url);
     setVideoSize(quality.urls[0].filesize);
   };
@@ -59,9 +65,9 @@ export default function Setting({
     <div className="relative">
       <Popover
         portalContainer={
-          fullScreen && document.fullscreenElement
-            ? document.fullscreenElement
-            : document.body
+          fullScreen && document?.fullscreenElement
+            ? document?.fullscreenElement
+            : document?.body
         }
         isOpen={isOpen}
         onOpenChange={setIsOpen}

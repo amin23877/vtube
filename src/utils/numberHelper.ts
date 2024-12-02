@@ -16,3 +16,9 @@ export function numberFormatter(num: number, digits: number) {
     ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol
     : "0";
 }
+
+export const formatDuration = (seconds: number): string => {
+  const minutes = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${minutes}:${secs < 10 ? `0${secs}` : secs}`;
+};

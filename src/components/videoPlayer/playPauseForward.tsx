@@ -7,13 +7,18 @@ export default function PlayPauseForward({
   button,
   playbackState,
   handleForward,
+  handleBackward,
 }: {
   button: string;
   playbackState: "playing" | "paused" | "loading";
   handleForward: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  handleBackward: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }) {
   return (
     <div className="flex items-center gap-2">
+      <button onClick={handleBackward} className={`${button} rotate-180`}>
+        <Image src={forwardIcon} alt="forward-icon" />
+      </button>
       <button
         className={`${button} ${playbackState === "paused" ? "pl-3" : ""}`}
       >

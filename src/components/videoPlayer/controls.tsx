@@ -21,6 +21,9 @@ export default function Controls({
   videoUrl,
   setVideoUrl,
   setVideoSize,
+  handleChangesrc,
+  videoRef,
+  handleBackward,
 }: IControls) {
   return (
     <div className="controls-linear-gradient absolute bottom-0 w-full rounded-lg">
@@ -29,6 +32,7 @@ export default function Controls({
           button={button}
           handleForward={handleForward}
           playbackState={playbackState}
+          handleBackward={handleBackward}
         />
         <div className="flex items-center gap-2">
           <Setting
@@ -38,6 +42,7 @@ export default function Controls({
             videoUrl={videoUrl}
             setVideoUrl={setVideoUrl}
             setVideoSize={setVideoSize}
+            handleChangesrc={handleChangesrc}
           />
           <Volume
             handleVolumeChange={handleVolumeChange}
@@ -51,7 +56,11 @@ export default function Controls({
           />
         </div>
       </div>
-      <ProgressBar seekVideo={seekVideo} progress={progress} />
+      <ProgressBar
+        videoRef={videoRef}
+        seekVideo={seekVideo}
+        progress={progress}
+      />
     </div>
   );
 }

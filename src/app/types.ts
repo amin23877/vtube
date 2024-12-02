@@ -1,5 +1,5 @@
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, RefObject, SetStateAction } from "react";
 
 export type IMovie = {
   id: number;
@@ -47,6 +47,7 @@ export type IControls = {
   button: string;
   playbackState: "playing" | "paused" | "loading";
   handleForward: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  handleBackward: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 
   handleVolumeChange: (e: number) => void;
   volume: number;
@@ -56,6 +57,8 @@ export type IControls = {
   fullScreen: boolean;
   seekVideo: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   progress: number;
+  handleChangesrc: () => void;
+  videoRef: RefObject<HTMLVideoElement>;
 };
 
 export type IChanelData = {

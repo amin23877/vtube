@@ -180,14 +180,59 @@ export default function VideoPlayer({
     }
   };
 
+  const handleBackward = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    if (videoRef.current) {
+      if (videoRef.current.currentTime - 10 > 0) {
+        videoRef.current.currentTime -= 10;
+        if (audioRef.current) audioRef.current.currentTime -= 10;
+      } else {
+        videoRef.current.currentTime = 0;
+        if (audioRef.current) audioRef.current.currentTime = 0;
+      }
+    }
+  };
+
+  const sinkVideoAndAudio = () => {
+    const videoTime = videoRef.current?.currentTime || 0;
+    const audioTime = audioRef.current?.currentTime || 0;
+    if (audioRef.current && Math.abs(videoTime - audioTime) > 0.2) {
+      audioRef.current.currentTime = videoTime;
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        handleForward(e as any);
+      } else if (e.key === "ArrowLeft") {
+        handleBackward(e as any);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
-      video.addEventListener("timeupdate", updateProgress);
+      video.addEventListener("timeupdate", () => {
+        updateProgress();
+        sinkVideoAndAudio();
+      });
     }
     return () => {
       if (video) {
-        video.removeEventListener("timeupdate", updateProgress);
+        video.removeEventListener("timeupdate", () => {
+          updateProgress();
+          sinkVideoAndAudio();
+        });
       }
     };
   }, []);
@@ -213,14 +258,52 @@ export default function VideoPlayer({
   }, []);
 
   useEffect(() => {
+    const videoElement = videoRef.current;
+
+    if (videoElement) {
+      const handleSourceChange = () => {
+        setCqLoading(true);
+        synchronizePlayback();
+      };
+
+      videoElement.addEventListener("emptied", handleSourceChange);
+      videoElement.addEventListener("waiting", handleSourceChange);
+
+      return () => {
+        videoElement.removeEventListener("emptied", handleSourceChange);
+        videoElement.removeEventListener("waiting", handleSourceChange);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+
+    if (videoElement) {
+      const handleCanPlay = () => {
+        handlePlay();
+      };
+
+      videoElement.addEventListener("canplay", handleCanPlay);
+
+      return () => {
+        videoElement.removeEventListener("canplay", handleCanPlay);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    const audioElement = audioRef.current;
+
     const handleLoadedMetadata = () => {
-      if (videoRef.current) {
-        videoRef.current.currentTime =
-          progress === 0 ? 0 : (progress * videoRef.current.duration) / 100;
+      if (videoElement) {
+        videoElement.currentTime =
+          progress === 0 ? 0 : (progress * videoElement.duration) / 100;
       }
-      if (audioRef.current) {
-        audioRef.current.currentTime =
-          progress === 0 ? 0 : (progress * audioRef.current.duration) / 100;
+      if (audioElement) {
+        audioElement.currentTime =
+          progress === 0 ? 0 : (progress * audioElement.duration) / 100;
       }
       if (playbackState === "playing") {
         handlePlay();
@@ -229,25 +312,23 @@ export default function VideoPlayer({
       }
     };
 
-    if (videoRef.current) {
-      // Attach the event listener to wait for duration to be available
-      videoRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
+    if (videoElement) {
+      videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
     }
 
-    if (audioRef.current) {
-      audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
+    if (audioElement) {
+      audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
     }
 
-    // Cleanup the event listener
     return () => {
-      if (videoRef.current) {
-        videoRef.current.removeEventListener(
+      if (videoElement) {
+        videoElement.removeEventListener(
           "loadedmetadata",
           handleLoadedMetadata
         );
       }
-      if (audioRef.current) {
-        audioRef.current.removeEventListener(
+      if (audioElement) {
+        audioElement.removeEventListener(
           "loadedmetadata",
           handleLoadedMetadata
         );
@@ -331,12 +412,14 @@ export default function VideoPlayer({
           showPlayPauseButton={showPlayPauseButton}
         />
         <Controls
+          videoRef={videoRef}
           streams={streams}
           videoUrl={videoUrl}
           setVideoUrl={setVideoUrl}
           setVideoSize={setVideoSize}
           button={button}
           handleForward={handleForward}
+          handleBackward={handleBackward}
           playbackState={playbackState}
           handleVolumeChange={handleVolumeChange}
           volume={volume}
@@ -344,6 +427,10 @@ export default function VideoPlayer({
           fullScreen={fullScreen}
           seekVideo={seekVideo}
           progress={progress}
+          handleChangesrc={() => {
+            setCqLoading(true);
+            synchronizePlayback();
+          }}
         />
       </div>
     </div>
