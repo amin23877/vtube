@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import CenterButton from "./centerButton";
 import Controls from "./controls";
@@ -164,36 +171,32 @@ export default function VideoPlayer({
     }
   };
 
-  const handleForward = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.stopPropagation();
+  const seekVideoBy = (seconds: number) => {
     if (videoRef.current) {
-      const duration = videoRef.current.duration;
-      if (duration - 10 > videoRef.current.currentTime) {
-        videoRef.current.currentTime += 10;
-        if (audioRef.current) audioRef.current.currentTime += 10;
-      } else {
-        videoRef.current.currentTime = duration;
-        if (audioRef.current) audioRef.current.currentTime = duration;
-      }
+      const newTime = Math.min(
+        Math.max(videoRef.current.currentTime + seconds, 0),
+        videoRef.current.duration
+      );
+      videoRef.current.currentTime = newTime;
+      if (audioRef.current) audioRef.current.currentTime = newTime;
     }
   };
 
-  const handleBackward = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.stopPropagation();
-    if (videoRef.current) {
-      if (videoRef.current.currentTime - 10 > 0) {
-        videoRef.current.currentTime -= 10;
-        if (audioRef.current) audioRef.current.currentTime -= 10;
-      } else {
-        videoRef.current.currentTime = 0;
-        if (audioRef.current) audioRef.current.currentTime = 0;
-      }
-    }
-  };
+  const handleForward = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.stopPropagation();
+      seekVideoBy(10);
+    },
+    []
+  );
+
+  const handleBackward = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.stopPropagation();
+      seekVideoBy(-10);
+    },
+    []
+  );
 
   const sinkVideoAndAudio = () => {
     const videoTime = videoRef.current?.currentTime || 0;
@@ -217,22 +220,20 @@ export default function VideoPlayer({
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [handleBackward, handleForward]);
 
   useEffect(() => {
     const video = videoRef.current;
+    const handleTimeUpdate = () => {
+      updateProgress();
+      sinkVideoAndAudio();
+    };
     if (video) {
-      video.addEventListener("timeupdate", () => {
-        updateProgress();
-        sinkVideoAndAudio();
-      });
+      video.addEventListener("timeupdate", handleTimeUpdate);
     }
     return () => {
       if (video) {
-        video.removeEventListener("timeupdate", () => {
-          updateProgress();
-          sinkVideoAndAudio();
-        });
+        video.removeEventListener("timeupdate", handleTimeUpdate);
       }
     };
   }, []);
