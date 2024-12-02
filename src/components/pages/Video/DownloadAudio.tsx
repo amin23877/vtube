@@ -42,7 +42,7 @@ function DownloadAudio({
         response?.headers
           ?.get("Content-Disposition")
           ?.split("filename=")[1]
-          ?.replace(/['"]+/g, "") || "audio.mp3"
+          ?.replace(/['"]+/g, "") || filename + ".mp3"
       );
 
       const a = document.createElement("a");

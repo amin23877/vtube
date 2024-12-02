@@ -42,7 +42,7 @@ function DownloadVideo({
         response?.headers
           ?.get("Content-Disposition")
           ?.split("filename=")[1]
-          ?.replace(/['"]+/g, "") || "video.mp4"
+          ?.replace(/['"]+/g, "") || filename + ".mp4"
       );
 
       const a = document.createElement("a");
