@@ -2,7 +2,7 @@
 
 import { IDownloadResponse } from "@/app/types";
 
-import CountsBadge from "@/components/CountsBadge";
+import CountsBadge from "@/components/Badges/Counts";
 
 import likeIcon from "@/assets/actions/like.svg";
 import viewIcon from "@/assets/actions/view.svg";
@@ -17,7 +17,6 @@ function VideoDetails({
   data,
   audioUrl,
   videoUrl,
-  id,
   md,
   audioSize,
   videoSize,
@@ -25,7 +24,6 @@ function VideoDetails({
   data: IDownloadResponse;
   audioUrl: string;
   videoUrl: string;
-  id: string;
   md: boolean;
   audioSize: number;
   videoSize: number;
@@ -50,13 +48,11 @@ function VideoDetails({
           <CountsBadge count={data.comment_count} icon={commentIcon} />
           <DownloadAudio
             audioUrl={audioUrl}
-            id={id}
             filename={data.title}
             filesize={audioSize}
           />
           <DownloadVideo
             videoUrl={videoUrl}
-            id={id}
             filename={data.title}
             filesize={videoSize}
           />

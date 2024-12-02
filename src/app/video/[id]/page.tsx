@@ -12,5 +12,5 @@ export default async function Video({ params }: { params: IParams }) {
   const streams: IStreams[] = await getQualities(id);
   if (!data) return <></>;
 
-  return <VideoPage id={id} data={data} streams={streams} />;
+  return <VideoPage data={data} streams={streams} />;
 }

@@ -6,11 +6,9 @@ import { IDownloadResponse, IStreams } from "@/app/types";
 import { useEffect, useMemo, useState } from "react";
 
 function VideoPage({
-  id,
   data,
   streams,
 }: {
-  id: string;
   data: IDownloadResponse;
   streams: IStreams[];
 }) {
@@ -54,7 +52,6 @@ function VideoPage({
       <VideoDetails
         md={md}
         data={data}
-        id={id}
         videoUrl={videoUrl}
         audioUrl={audio.url}
         audioSize={audio.filesize}

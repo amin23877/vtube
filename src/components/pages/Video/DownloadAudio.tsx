@@ -1,41 +1,75 @@
-import ButtonBadge from "@/components/ButtonBadge";
+import ButtonBadge from "@/components/Badges/Button";
 
 import musicIcon from "@/assets/actions/music.svg";
 import musicHoverIcon from "@/assets/actions/musicHover.svg";
+import { useState } from "react";
+import LoadingBadge from "@/components/Badges/Loading";
 
 function DownloadAudio({
   audioUrl,
-  id,
   filename,
   filesize,
 }: {
   audioUrl: string;
-  id: string;
   filename: string;
   filesize: number;
 }) {
-  const handleDownloadAudio = () => {
-    const downloadLink = `${
+  const [loading, setLoading] = useState(false);
+
+  const downloadFile = async () => {
+    setLoading(true);
+    const url = `${
       process.env.NEXT_PUBLIC_HOST
     }youtube/download-audio?audio_url=${encodeURIComponent(
       audioUrl
     )}&filename=${filename}&filesize=${filesize}`;
-    const link = document.createElement("a");
-    link.href = downloadLink;
-    link.download = `video_${id}`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Range: "bytes=0-",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const title = decodeURIComponent(
+        response?.headers
+          ?.get("Content-Disposition")
+          ?.split("filename=")[1]
+          ?.replace(/['"]+/g, "") || "audio.mp3"
+      );
+
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+      a.download = title;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      <ButtonBadge
-        onClick={handleDownloadAudio}
-        title={"دانلود صدا"}
-        icon={musicIcon}
-        hoverIcon={musicHoverIcon}
-      />
+      {loading ? (
+        <LoadingBadge />
+      ) : (
+        <ButtonBadge
+          onClick={downloadFile}
+          title={"دانلود صدا"}
+          icon={musicIcon}
+          hoverIcon={musicHoverIcon}
+        />
+      )}
     </>
   );
 }

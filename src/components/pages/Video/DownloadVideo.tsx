@@ -1,41 +1,75 @@
-import ButtonBadge from "@/components/ButtonBadge";
+import ButtonBadge from "@/components/Badges/Button";
 
 import downloadIcon from "@/assets/actions/download.svg";
 import downloadHoverIcon from "@/assets/actions/downloadHover.svg";
+import { useState } from "react";
+import LoadingBadge from "@/components/Badges/Loading";
 
 function DownloadVideo({
   videoUrl,
-  id,
   filename,
   filesize,
 }: {
   videoUrl: string;
-  id: string;
   filename: string;
   filesize: number;
 }) {
-  const handleDownloadVideo = () => {
-    const downloadLink = `${
+  const [loading, setLoading] = useState(false);
+
+  const downloadFile = async () => {
+    setLoading(true);
+    const url = `${
       process.env.NEXT_PUBLIC_HOST
     }youtube/download-video?video_url=${encodeURIComponent(
       videoUrl
     )}&filesize=${filesize}&filename=${filename}`;
-    const link = document.createElement("a");
-    link.href = downloadLink;
-    link.download = `video_${id}`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Range: "bytes=0-",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const title = decodeURIComponent(
+        response?.headers
+          ?.get("Content-Disposition")
+          ?.split("filename=")[1]
+          ?.replace(/['"]+/g, "") || "video.mp4"
+      );
+
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+      a.download = title;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      <ButtonBadge
-        onClick={handleDownloadVideo}
-        title={"دانلود ویدیو"}
-        icon={downloadIcon}
-        hoverIcon={downloadHoverIcon}
-      />
+      {loading ? (
+        <LoadingBadge />
+      ) : (
+        <ButtonBadge
+          onClick={downloadFile}
+          title={"دانلود ویدیو"}
+          icon={downloadIcon}
+          hoverIcon={downloadHoverIcon}
+        />
+      )}
     </>
   );
 }
