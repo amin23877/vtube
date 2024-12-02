@@ -14,15 +14,18 @@ function VideoPage({
   data: IDownloadResponse;
   streams: IStreams[];
 }) {
-  const audioUrl = useMemo(() => {
-    return streams.filter((i) => i.type === "audio")[0].url;
+  const audio = useMemo(() => {
+    const firstAudio = streams.filter((i) => i.type === "audio")[0];
+    return { url: firstAudio.url, filesize: firstAudio.filesize };
   }, [streams]);
 
   const defaultVideoUrl = useMemo(() => {
-    return streams.filter((i) => i.video_codec && i.audio_codec)[0].url;
+    const firstVideo = streams.filter((i) => i.type === "video")[0];
+    return { url: firstVideo.url, filesize: firstVideo.filesize };
   }, [streams]);
 
-  const [videoUrl, setVideoUrl] = useState(defaultVideoUrl);
+  const [videoUrl, setVideoUrl] = useState(defaultVideoUrl.url);
+  const [videoSize, setVideoSize] = useState(defaultVideoUrl.filesize);
   const [md, setMd] = useState<boolean>(false);
 
   useEffect(() => {
@@ -38,19 +41,24 @@ function VideoPage({
   return (
     <div className={md ? "px-4" : "px-10"}>
       <VideoPlayer
+        videoSize={videoSize}
+        audioSize={audio.filesize}
         md={md}
         poster={data.thumbnail_url}
-        audioUrl={audioUrl}
+        audioUrl={audio.url}
         videoUrl={videoUrl}
         setVideoUrl={setVideoUrl}
         streams={streams}
+        setVideoSize={setVideoSize}
       />
       <VideoDetails
         md={md}
         data={data}
         id={id}
         videoUrl={videoUrl}
-        audioUrl={audioUrl}
+        audioUrl={audio.url}
+        audioSize={audio.filesize}
+        videoSize={videoSize}
       />
     </div>
   );

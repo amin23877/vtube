@@ -13,6 +13,9 @@ type IVideoPlayer = {
   setVideoUrl: Dispatch<SetStateAction<string>>;
   streams: IStreams[];
   md: boolean;
+  setVideoSize: Dispatch<SetStateAction<number>>;
+  audioSize: number;
+  videoSize: number;
 };
 
 export default function VideoPlayer({
@@ -22,6 +25,9 @@ export default function VideoPlayer({
   videoUrl,
   setVideoUrl,
   streams,
+  setVideoSize,
+  audioSize,
+  videoSize,
 }: IVideoPlayer) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -306,13 +312,17 @@ export default function VideoPlayer({
           className="w-full rounded-lg"
           src={`${
             process.env.NEXT_PUBLIC_HOST
-          }youtube/proxy-video?video_url=${encodeURIComponent(videoUrl)}`}
+          }youtube/proxy-video?video_url=${encodeURIComponent(
+            videoUrl
+          )}&filesize=${videoSize}`}
         />
         <audio
           ref={audioRef}
           src={`${
             process.env.NEXT_PUBLIC_HOST
-          }youtube/proxy-audio?audio_url=${encodeURIComponent(audioUrl)}`}
+          }youtube/proxy-audio?audio_url=${encodeURIComponent(
+            audioUrl
+          )}&filesize=${audioSize}`}
         />
         <CenterButton
           cqLoading={cqLoading}
@@ -323,6 +333,7 @@ export default function VideoPlayer({
           streams={streams}
           videoUrl={videoUrl}
           setVideoUrl={setVideoUrl}
+          setVideoSize={setVideoSize}
           button={button}
           handleForward={handleForward}
           playbackState={playbackState}
