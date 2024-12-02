@@ -4,12 +4,16 @@ import { IStreams } from "@/app/types";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
 
-type IQualities = { resolution: string; urls: { type: string; url: string }[] };
+type IQualities = {
+  resolution: string;
+  urls: { type: string; url: string; filesize: number }[];
+};
 
 export default function Setting({
   button,
   fullScreen,
   setVideoUrl,
+  setVideoSize,
   videoUrl,
   streams,
 }: {
@@ -17,12 +21,13 @@ export default function Setting({
   fullScreen: boolean;
   videoUrl: string;
   setVideoUrl: Dispatch<SetStateAction<string>>;
+  setVideoSize: Dispatch<SetStateAction<number>>;
   streams: IStreams[];
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const groupedData = Object.values(
-    streams.reduce((acc, { type, url, resolution }) => {
+    streams.reduce((acc, { type, url, resolution, filesize }) => {
       if (!resolution || resolution === "null") return acc;
 
       const formattedResolution =
@@ -36,7 +41,7 @@ export default function Setting({
           urls: [],
         };
       }
-      acc[formattedResolution].urls.push({ url, type });
+      acc[formattedResolution].urls.push({ url, type, filesize });
       return acc;
     }, {} as Record<string, IQualities>)
   ).sort((a, b) => {
@@ -47,6 +52,7 @@ export default function Setting({
 
   const handleChangeResolution = async (quality: IQualities) => {
     setVideoUrl(quality.urls[0].url);
+    setVideoSize(quality.urls[0].filesize);
   };
 
   return (

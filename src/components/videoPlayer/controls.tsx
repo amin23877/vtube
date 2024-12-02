@@ -20,6 +20,7 @@ export default function Controls({
   streams,
   videoUrl,
   setVideoUrl,
+  setVideoSize,
 }: IControls) {
   return (
     <div className="controls-linear-gradient absolute bottom-0 w-full rounded-lg">
@@ -36,6 +37,7 @@ export default function Controls({
             streams={streams}
             videoUrl={videoUrl}
             setVideoUrl={setVideoUrl}
+            setVideoSize={setVideoSize}
           />
           <Volume
             handleVolumeChange={handleVolumeChange}

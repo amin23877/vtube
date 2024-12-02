@@ -19,12 +19,16 @@ function VideoDetails({
   videoUrl,
   id,
   md,
+  audioSize,
+  videoSize,
 }: {
   data: IDownloadResponse;
   audioUrl: string;
   videoUrl: string;
   id: string;
   md: boolean;
+  audioSize: number;
+  videoSize: number;
 }) {
   return (
     <>
@@ -44,8 +48,18 @@ function VideoDetails({
           <CountsBadge count={data.like_count} icon={likeIcon} />
           <CountsBadge count={data.view_count} icon={viewIcon} />
           <CountsBadge count={data.comment_count} icon={commentIcon} />
-          <DownloadAudio audioUrl={audioUrl} id={id} />
-          <DownloadVideo videoUrl={videoUrl} id={id} />
+          <DownloadAudio
+            audioUrl={audioUrl}
+            id={id}
+            filename={data.title}
+            filesize={audioSize}
+          />
+          <DownloadVideo
+            videoUrl={videoUrl}
+            id={id}
+            filename={data.title}
+            filesize={videoSize}
+          />
         </div>
       </div>
       {<VideoDescription desc={data.description} />}

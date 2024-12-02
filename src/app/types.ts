@@ -41,6 +41,7 @@ export type IDownloadResponse = {
 export type IControls = {
   videoUrl: string;
   setVideoUrl: Dispatch<SetStateAction<string>>;
+  setVideoSize: Dispatch<SetStateAction<number>>;
   streams: IStreams[];
 
   button: string;
