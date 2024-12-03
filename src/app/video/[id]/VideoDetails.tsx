@@ -17,6 +17,7 @@ function VideoDetails({
   data,
   audioUrl,
   videoUrl,
+  resolution,
   md,
   audioSize,
   videoSize,
@@ -24,6 +25,7 @@ function VideoDetails({
   data: IDownloadResponse;
   audioUrl: string;
   videoUrl: string;
+  resolution: string;
   md: boolean;
   audioSize: number;
   videoSize: number;
@@ -52,6 +54,7 @@ function VideoDetails({
             filesize={audioSize}
           />
           <DownloadVideo
+            resolution={resolution}
             videoUrl={videoUrl}
             filename={data.title}
             filesize={videoSize}

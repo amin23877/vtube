@@ -15,6 +15,7 @@ export default function Setting({
   button,
   fullScreen,
   setVideoUrl,
+  setResolution,
   setVideoSize,
   videoUrl,
   streams,
@@ -24,6 +25,7 @@ export default function Setting({
   fullScreen: boolean;
   videoUrl: string;
   setVideoUrl: Dispatch<SetStateAction<string>>;
+  setResolution: Dispatch<SetStateAction<string>>;
   setVideoSize: Dispatch<SetStateAction<number>>;
   streams: IStreams[];
   handleChangesrc: () => void;
@@ -59,6 +61,7 @@ export default function Setting({
     handleChangesrc();
     setVideoUrl(quality.urls[0].url);
     setVideoSize(quality.urls[0].filesize);
+    setResolution(quality.resolution);
   };
 
   return (

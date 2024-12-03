@@ -4,15 +4,18 @@ import downloadIcon from "@/assets/actions/download.svg";
 import downloadHoverIcon from "@/assets/actions/downloadHover.svg";
 import { useState } from "react";
 import LoadingBadge from "@/components/Badges/Loading";
+import { numberFormatter } from "@/utils/numberHelper";
 
 function DownloadVideo({
   videoUrl,
   filename,
   filesize,
+  resolution,
 }: {
   videoUrl: string;
   filename: string;
   filesize: number;
+  resolution: string;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -63,12 +66,14 @@ function DownloadVideo({
       {loading ? (
         <LoadingBadge />
       ) : (
-        <ButtonBadge
-          onClick={downloadFile}
-          title={"دانلود ویدیو"}
-          icon={downloadIcon}
-          hoverIcon={downloadHoverIcon}
-        />
+        <span title={numberFormatter(filesize, 2) + "B"}>
+          <ButtonBadge
+            onClick={downloadFile}
+            title={"دانلود ویدیو" + ` (${resolution})`}
+            icon={downloadIcon}
+            hoverIcon={downloadHoverIcon}
+          />
+        </span>
       )}
     </>
   );

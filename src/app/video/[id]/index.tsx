@@ -19,10 +19,15 @@ function VideoPage({
 
   const defaultVideoUrl = useMemo(() => {
     const firstVideo = streams.filter((i) => i.type === "video")[0];
-    return { url: firstVideo.url, filesize: firstVideo.filesize };
+    return {
+      url: firstVideo.url,
+      filesize: firstVideo.filesize,
+      resolution: firstVideo.resolution,
+    };
   }, [streams]);
 
   const [videoUrl, setVideoUrl] = useState(defaultVideoUrl.url);
+  const [resolution, setResolution] = useState(defaultVideoUrl.resolution);
   const [videoSize, setVideoSize] = useState(defaultVideoUrl.filesize);
   const [md, setMd] = useState<boolean>(false);
 
@@ -39,6 +44,7 @@ function VideoPage({
   return (
     <div className={md ? "px-4" : "px-10"}>
       <VideoPlayer
+        setResolution={setResolution}
         videoSize={videoSize}
         audioSize={audio.filesize}
         md={md}
@@ -50,6 +56,7 @@ function VideoPage({
         setVideoSize={setVideoSize}
       />
       <VideoDetails
+        resolution={resolution}
         md={md}
         data={data}
         videoUrl={videoUrl}

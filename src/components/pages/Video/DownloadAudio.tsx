@@ -4,6 +4,7 @@ import musicIcon from "@/assets/actions/music.svg";
 import musicHoverIcon from "@/assets/actions/musicHover.svg";
 import { useState } from "react";
 import LoadingBadge from "@/components/Badges/Loading";
+import { numberFormatter } from "@/utils/numberHelper";
 
 function DownloadAudio({
   audioUrl,
@@ -63,12 +64,14 @@ function DownloadAudio({
       {loading ? (
         <LoadingBadge />
       ) : (
-        <ButtonBadge
-          onClick={downloadFile}
-          title={"دانلود صدا"}
-          icon={musicIcon}
-          hoverIcon={musicHoverIcon}
-        />
+        <span title={numberFormatter(filesize, 2) + "B"}>
+          <ButtonBadge
+            onClick={downloadFile}
+            title={"دانلود صدا"}
+            icon={musicIcon}
+            hoverIcon={musicHoverIcon}
+          />
+        </span>
       )}
     </>
   );

@@ -20,6 +20,7 @@ export default function Controls({
   streams,
   videoUrl,
   setVideoUrl,
+  setResolution,
   setVideoSize,
   handleChangesrc,
   videoRef,
@@ -41,6 +42,7 @@ export default function Controls({
             streams={streams}
             videoUrl={videoUrl}
             setVideoUrl={setVideoUrl}
+            setResolution={setResolution}
             setVideoSize={setVideoSize}
             handleChangesrc={handleChangesrc}
           />

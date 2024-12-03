@@ -13,7 +13,7 @@ export default function Volume({
   volume: number;
 }) {
   return (
-    <div className="relative group">
+    <div className="relative group" onClick={(e) => e.stopPropagation()}>
       <button className={`text-white shadow-md focus:outline-none ${button}`}>
         <Image
           src={

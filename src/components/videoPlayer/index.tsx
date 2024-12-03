@@ -18,6 +18,7 @@ type IVideoPlayer = {
   audioUrl: string;
   videoUrl: string;
   setVideoUrl: Dispatch<SetStateAction<string>>;
+  setResolution: Dispatch<SetStateAction<string>>;
   streams: IStreams[];
   md: boolean;
   setVideoSize: Dispatch<SetStateAction<number>>;
@@ -33,6 +34,7 @@ export default function VideoPlayer({
   setVideoUrl,
   streams,
   setVideoSize,
+  setResolution,
   audioSize,
   videoSize,
 }: IVideoPlayer) {
@@ -46,9 +48,41 @@ export default function VideoPlayer({
   const [cqLoading, setCqLoading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [showPlayPauseButton, setShowPlayPauseButton] = useState<boolean>(true);
+  const [controlsVisible, setControlsVisible] = useState<boolean>(true);
+  const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [fullScreen, setFullScreen] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(1);
 
+  const showControls = useCallback(() => {
+    setControlsVisible(true);
+    if (controlsTimeoutRef.current) {
+      clearTimeout(controlsTimeoutRef.current);
+    }
+    controlsTimeoutRef.current = setTimeout(() => {
+      if (playbackState === "playing") setControlsVisible(false);
+    }, 3000); // Hide controls after 3 seconds of inactivity
+  }, [playbackState]);
+
+  useEffect(() => {
+    const videoContainer = containerRef.current;
+    if (videoContainer) {
+      videoContainer.addEventListener("mousemove", showControls);
+      videoContainer.addEventListener("touchstart", showControls);
+    }
+
+    return () => {
+      if (videoContainer) {
+        videoContainer.removeEventListener("mousemove", showControls);
+        videoContainer.removeEventListener("touchstart", showControls);
+      }
+    };
+  }, [showControls]);
+
+  useEffect(() => {
+    if (playbackState === "paused") {
+      setControlsVisible(true);
+    }
+  }, [playbackState]);
   const handlePlay = (e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e?.stopPropagation();
     if (videoRef.current && audioRef.current) {
@@ -412,27 +446,30 @@ export default function VideoPlayer({
           playbackState={playbackState}
           showPlayPauseButton={showPlayPauseButton}
         />
-        <Controls
-          videoRef={videoRef}
-          streams={streams}
-          videoUrl={videoUrl}
-          setVideoUrl={setVideoUrl}
-          setVideoSize={setVideoSize}
-          button={button}
-          handleForward={handleForward}
-          handleBackward={handleBackward}
-          playbackState={playbackState}
-          handleVolumeChange={handleVolumeChange}
-          volume={volume}
-          toggleFullScreen={toggleFullScreen}
-          fullScreen={fullScreen}
-          seekVideo={seekVideo}
-          progress={progress}
-          handleChangesrc={() => {
-            setCqLoading(true);
-            synchronizePlayback();
-          }}
-        />
+        {controlsVisible && (
+          <Controls
+            videoRef={videoRef}
+            streams={streams}
+            videoUrl={videoUrl}
+            setVideoUrl={setVideoUrl}
+            setResolution={setResolution}
+            setVideoSize={setVideoSize}
+            button={button}
+            handleForward={handleForward}
+            handleBackward={handleBackward}
+            playbackState={playbackState}
+            handleVolumeChange={handleVolumeChange}
+            volume={volume}
+            toggleFullScreen={toggleFullScreen}
+            fullScreen={fullScreen}
+            seekVideo={seekVideo}
+            progress={progress}
+            handleChangesrc={() => {
+              setCqLoading(true);
+              synchronizePlayback();
+            }}
+          />
+        )}
       </div>
     </div>
   );
