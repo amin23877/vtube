@@ -64,6 +64,12 @@ export default function VideoPlayer({
   }, [playbackState]);
 
   useEffect(() => {
+    setTimeout(() => {
+      if (playbackState === "playing") setControlsVisible(false);
+    }, 3000);
+  }, [playbackState]);
+
+  useEffect(() => {
     const videoContainer = containerRef.current;
     if (videoContainer) {
       videoContainer.addEventListener("mousemove", showControls);
