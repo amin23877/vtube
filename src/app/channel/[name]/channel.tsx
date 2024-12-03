@@ -1,7 +1,11 @@
+"use client";
 import Image from "next/image";
-
 import { IChanelData } from "@/app/types";
 import ChannelSummary from "@/components/ChannelSummary";
+import TypeTab from "./typeTab";
+import { useState } from "react";
+import Videos from "./videos";
+import Shorts from "./shorts";
 
 export default function Chanel({
   banner,
@@ -9,7 +13,9 @@ export default function Chanel({
   thumbnail,
   total_subscribers,
   total_videos,
+  firstMedia,
 }: IChanelData) {
+  const [type, setType] = useState<React.Key>("videos");
   return (
     <div className="p-[36px] pt-0 pb-4">
       <Image
@@ -31,6 +37,12 @@ export default function Chanel({
         name={channel_name}
         subscribersCount={`${total_subscribers} مشترک - ${total_videos} ویدیو`}
       />
+      <TypeTab setType={setType} />
+      {type === "videos" ? (
+        <Videos name={channel_name} first_data={firstMedia?.videos || []} />
+      ) : (
+        <Shorts name={channel_name} />
+      )}
     </div>
   );
 }

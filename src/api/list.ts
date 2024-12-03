@@ -1,17 +1,20 @@
+import { Key } from "react";
 import { get } from ".";
 
 export const channel_data = (channel_username: string) => {
   return get(`youtube/channel-data?channel_username=${channel_username}`);
 };
 
-export const chanel_media = (
+export const channel_media = (
   channel_username: string,
-  data_type: "VIDEOS" | "SHORTS" | "LIVES" = "VIDEOS",
+  data_type: Key = "VIDEOS",
   start: number = 0,
   stop: number = 12
 ) => {
   return get(
-    `youtube/channel-media?channel_username=${channel_username}&data_type=${data_type}&start=${start}&stop=${stop}`
+    `youtube/channel-media?channel_username=${channel_username}&data_type=${String(
+      data_type
+    ).toUpperCase()}&start=${start}&stop=${stop}`
   );
 };
 

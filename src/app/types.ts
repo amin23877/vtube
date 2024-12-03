@@ -21,9 +21,24 @@ export type IVideo = {
   watch_url: string;
 };
 
+export type IShort = {
+  video_id: string;
+  watch_url: string;
+  title: string;
+  duration: number;
+  view_count: number;
+  thumbnail_url: string;
+  channel_thumbnail_url: string;
+};
+
 export type ISearch = {
   videos: IVideo[];
   cursor: string;
+};
+
+export type IChannelMedia = {
+  videos: IVideo[];
+  shorts: IShort[];
 };
 
 export type IDownloadResponse = {
@@ -72,6 +87,7 @@ export type IChanelData = {
   total_subscribers: string;
   total_videos: string;
   total_views: number;
+  firstMedia?: IChannelMedia;
 };
 
 export type IStreams = {
