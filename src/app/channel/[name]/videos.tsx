@@ -6,14 +6,8 @@ import SearchVideoItem from "@/components/SearchVideoItem";
 import Link from "next/link";
 import Loading from "@/components/Loading";
 
-export default function Videos({
-  name,
-  first_data,
-}: {
-  name: string;
-  first_data: IVideo[];
-}) {
-  const [videos, setVideos] = useState<IVideo[]>(first_data || []);
+export default function Videos({ name }: { name: string }) {
+  const [videos, setVideos] = useState<IVideo[]>([]);
   const [number, setNumber] = useState<number>(1);
   const [isLoading, setLoading] = useState(false);
 
@@ -30,6 +24,25 @@ export default function Videos({
   }, []);
 
   const loadingRef = useRef(false);
+  useEffect(() => {
+    setLoading(true);
+    channel_media(name, "VIDEOS", 0, 12)
+      .then((res) => {
+        setVideos([...res.videos]);
+        setNumber((x) => x + 1);
+      })
+      .then(() => {
+        loadingRef.current = false;
+      })
+      .catch((err) => {
+        console.log(err);
+        loadingRef.current = false;
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [name]);
+
   const handleScroll = useCallback(() => {
     if (loadingRef.current || isLoading) return;
 

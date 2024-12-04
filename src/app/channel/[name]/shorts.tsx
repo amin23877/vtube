@@ -13,9 +13,8 @@ export default function Shorts({ name }: { name: string }) {
   const [isLoading, setLoading] = useState(false);
 
   const loadingRef = useRef(false);
-  let firstLoading = false;
   useEffect(() => {
-    firstLoading = true;
+    setLoading(true);
     channel_media(name, "SHORTS", 0, 12)
       .then((res) => {
         setShorts([...res.shorts]);
@@ -23,12 +22,13 @@ export default function Shorts({ name }: { name: string }) {
       })
       .then(() => {
         loadingRef.current = false;
-        firstLoading = false;
       })
       .catch((err) => {
         console.log(err);
         loadingRef.current = false;
-        firstLoading = false;
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [name]);
 
@@ -76,7 +76,7 @@ export default function Shorts({ name }: { name: string }) {
           );
         })}
       </div>
-      {(isLoading || firstLoading) && (
+      {isLoading && (
         <div className="relative w-[30px] h-[25px] mx-auto my-2">
           <Loading />
         </div>

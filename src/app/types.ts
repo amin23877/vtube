@@ -88,7 +88,6 @@ export type IChanelData = {
   total_subscribers: string;
   total_videos: string;
   total_views: number;
-  firstMedia?: IChannelMedia;
 };
 
 export type IStreams = {

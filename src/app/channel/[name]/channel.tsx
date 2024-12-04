@@ -13,7 +13,6 @@ export default function Chanel({
   thumbnail,
   total_subscribers,
   total_videos,
-  firstMedia,
 }: IChanelData) {
   const [type, setType] = useState<React.Key>("videos");
   return (
@@ -39,7 +38,7 @@ export default function Chanel({
       />
       <TypeTab setType={setType} />
       {type === "videos" ? (
-        <Videos name={channel_name} first_data={firstMedia?.videos || []} />
+        <Videos name={channel_name} />
       ) : (
         <Shorts name={channel_name} />
       )}
