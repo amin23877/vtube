@@ -3,7 +3,7 @@
 import Image from "next/image";
 import settingIcon from "@/assets/videoPlayer/setting.svg";
 import { IStreams } from "@/app/types";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
 
 type IQualities = {
@@ -31,6 +31,7 @@ export default function Setting({
   handleChangesrc: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState<Element>();
 
   const groupedData = Object.values(
     streams.reduce((acc, { type, url, resolution, filesize }) => {
@@ -64,14 +65,16 @@ export default function Setting({
     setResolution(quality.resolution);
   };
 
+  useEffect(() => {
+    if (fullScreen && document?.fullscreenElement) {
+      setIsFullScreen(document?.fullscreenElement);
+    } else setIsFullScreen(document?.body);
+  }, [fullScreen]);
+
   return (
     <div className="relative">
       <Popover
-        portalContainer={
-          fullScreen && document?.fullscreenElement
-            ? document?.fullscreenElement
-            : document?.body
-        }
+        portalContainer={isFullScreen}
         isOpen={isOpen}
         onOpenChange={setIsOpen}
       >
