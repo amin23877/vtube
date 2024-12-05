@@ -160,6 +160,13 @@ export default function VideoPlayer({
         requestFullScreen
           .call(container)
           .then(() => {
+            if (screen.orientation && (screen.orientation as any).lock) {
+              (screen.orientation as any)
+                .lock("landscape")
+                .catch((err: any) => {
+                  console.warn("Failed to lock orientation:", err);
+                });
+            }
             setFullScreen(true);
           })
           .catch((err) => {
