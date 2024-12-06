@@ -89,6 +89,7 @@ export default function VideoPlayer({
       setControlsVisible(true);
     }
   }, [playbackState]);
+
   const handlePlay = (e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e?.stopPropagation();
     if (videoRef.current && audioRef.current) {
@@ -148,7 +149,7 @@ export default function VideoPlayer({
       return;
     }
 
-    if (!document.fullscreenElement) {
+    if (document && !document.fullscreenElement) {
       const requestFullScreen =
         container.requestFullscreen ||
         (container as any).webkitRequestFullscreen ||
@@ -159,6 +160,13 @@ export default function VideoPlayer({
         requestFullScreen
           .call(container)
           .then(() => {
+            if (screen.orientation && (screen.orientation as any).lock) {
+              (screen.orientation as any)
+                .lock("landscape")
+                .catch((err: any) => {
+                  console.warn("Failed to lock orientation:", err);
+                });
+            }
             setFullScreen(true);
           })
           .catch((err) => {
@@ -169,10 +177,10 @@ export default function VideoPlayer({
       }
     } else {
       const exitFullScreen =
-        document.exitFullscreen ||
-        (document as any).webkitExitFullscreen ||
-        (document as any).mozCancelFullScreen ||
-        (document as any).msExitFullscreen;
+        document?.exitFullscreen ||
+        (document as any)?.webkitExitFullscreen ||
+        (document as any)?.mozCancelFullScreen ||
+        (document as any)?.msExitFullscreen;
 
       if (exitFullScreen) {
         exitFullScreen
@@ -255,10 +263,10 @@ export default function VideoPlayer({
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
+    document?.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document?.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleBackward, handleForward]);
 
@@ -308,11 +316,9 @@ export default function VideoPlayer({
       };
 
       videoElement.addEventListener("emptied", handleSourceChange);
-      videoElement.addEventListener("waiting", handleSourceChange);
 
       return () => {
         videoElement.removeEventListener("emptied", handleSourceChange);
-        videoElement.removeEventListener("waiting", handleSourceChange);
       };
     }
   }, []);
@@ -378,11 +384,12 @@ export default function VideoPlayer({
   }, [progress, playbackState]);
 
   const handleFullscreenChange = () => {
-    setFullScreen(!!document.fullscreenElement);
+    setFullScreen(!!document?.fullscreenElement);
   };
 
   // Attach fullscreenchange event listener
   useEffect(() => {
+    if (!document) return;
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     document.addEventListener("webkitfullscreenchange", handleFullscreenChange); // Safari
     document.addEventListener("mozfullscreenchange", handleFullscreenChange); // Firefox
@@ -429,7 +436,7 @@ export default function VideoPlayer({
           poster={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${poster}`}
           style={{
             aspectRatio: "16/9",
-            height: fullScreen || md ? "auto" : "calc(100vh - 100px - 2.5rem)",
+            height: fullScreen || md ? "100%" : "calc(100vh - 100px - 2.5rem)",
           }}
           ref={videoRef}
           className="w-full rounded-lg"
