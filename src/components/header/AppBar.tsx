@@ -12,9 +12,12 @@ export default function AppBar({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [mode, setMode] = useState(pathname === "/" ? false : true);
   const [display, setDisplay] = useState(pathname === "/" ? false : true);
+  const [noHeader, setNoHeader] = useState<boolean>();
   const router = useRouter();
   const [md, setMd] = useState<boolean>(false);
   const [sm, setSm] = useState<boolean>(false);
+
+  const noHeaderPages: string[] = ["/signIn", "/signUp", "/forgetPassword"];
 
   useEffect(() => {
     const handleResize = () => {
@@ -45,11 +48,55 @@ export default function AppBar({ children }: { children: ReactNode }) {
     if (pathname === "/") {
       setMode(false);
       setDisplay(false);
+      setNoHeader(false);
+    } else if (noHeaderPages.find((x) => x === pathname)) {
+      setNoHeader(true);
     } else {
+      setNoHeader(false);
       setMode(true);
       setDisplay(true);
     }
   }, [pathname]);
+
+  if (noHeader)
+    return (
+      <div
+        style={{
+          backgroundImage: "url('/background.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          width: "100%",
+          minHeight: "100vh",
+          padding: "40px",
+        }}
+      >
+        <div
+          className="shadowBox bg-gray-400 bg-opacity-[0.10] rounded-3xl flex justify-center items-center"
+          style={{
+            width: "calc(100vw - 80px)",
+            height: "calc(100vh - 80px)",
+          }}
+        >
+          <div className="bg-[#2F3136] w-[450px] flex flex-col items-center rounded-[12px] px-6">
+            <Image
+              className="w-[156px] my-8"
+              src={logo}
+              width={156}
+              alt="vtube-logo"
+            />
+            <div
+              className="bg-[#849CA8] w-full mb-[36px] bg-opacity-[0.10] flex flex-col gap-8 p-8 rounded-[12px]"
+              style={{
+                backdropFilter: "blur(40px)",
+                boxShadow: "24px 4px 91px 0px #00000040",
+              }}
+            >
+              {children}
+            </div>
+          </div>
+        </div>{" "}
+      </div>
+    );
 
   return (
     <div
