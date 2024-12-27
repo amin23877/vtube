@@ -1,17 +1,16 @@
 "use client";
 
 import { sessionKey } from "@/api";
-import { login } from "@/api/auth";
+import { signUp } from "@/api/auth";
 import CustomInput from "@/components/customInput";
 import Loading from "@/components/Loading";
 import { Button } from "@mui/material";
 import { setCookie } from "cookies-next";
 import { useFormik } from "formik";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function SignIn() {
+function Register({ clientID, number }: { clientID: string; number: string }) {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
@@ -21,11 +20,13 @@ export default function SignIn() {
     initialValues: {
       username: "",
       password: "",
+      passwordConfirm: "",
+      phone_number: number,
     },
     onSubmit: (values) => {
       setLoading(true);
 
-      login(values.username, values.password)
+      signUp(values, clientID)
         .then(async (res) => {
           if (res.access_token) {
             await setCookie(sessionKey, res.access_token);
@@ -42,7 +43,7 @@ export default function SignIn() {
   });
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-8 items-center">
-      {error && <>نام کاربری یا رمز عبور اشتباه است</>}
+      {error && <>{error}</>}
       <CustomInput
         label="نام کاربری"
         name="username"
@@ -56,24 +57,18 @@ export default function SignIn() {
         value={values.password}
         onChange={handleChange}
       />
+      <CustomInput
+        label="تکرار رمز عبور"
+        name="passwordConfirm"
+        type="password"
+        value={values.passwordConfirm}
+        onChange={handleChange}
+      />
       <Button variant="contained" type="submit" fullWidth disabled={loading}>
-        {loading ? <Loading /> : <>ورود به حساب کاربری</>}
+        {loading ? <Loading /> : <> تایید </>}
       </Button>
-      {/* <Link
-        href="/forgetPassword"
-        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-      >
-        فراموشی رمز عبور
-      </Link> */}
-      <div>
-        حسابی ندارید؟{" "}
-        <Link
-          href="/signUp"
-          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-        >
-          ثبت نام کنید
-        </Link>
-      </div>
     </form>
   );
 }
+
+export default Register;

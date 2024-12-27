@@ -20,7 +20,7 @@ export default function Home() {
 
   return (
     <div
-      className={`transition-all duration-200 flex items-center gap-6 flex-col h-[calc(100vh_-_80px_-_5rem)] p-5 flex align-center`}
+      className={`transition-all duration-200 flex items-center gap-6 flex-col h-[calc(100vh_-_80px_-_5rem)] p-5`}
       style={{ paddingTop: "calc(50vh - 270px)" }}
     >
       <Image
