@@ -18,6 +18,8 @@
     "next": "15.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "stylis": "^4.3.4",
+    "stylis-plugin-rtl": "^2.1.1",
     "swiper": "^11.1.15",
     "swr": "^2.2.5"
   },
@@ -25,6 +27,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/stylis": "^4.2.7",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
     "postcss": "^8",

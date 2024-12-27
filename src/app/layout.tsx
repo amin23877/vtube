@@ -4,7 +4,7 @@ import AppBar from "@/components/header/AppBar";
 import React, { Suspense } from "react";
 import type { Metadata } from "next";
 import Loading from "./loading";
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import ClientProvider from "@/HOC/ClientProviders";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -15,10 +15,6 @@ const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
-});
-
-const theme = createTheme({
-  direction: "rtl", // Global RTL setting
 });
 
 export const metadata: Metadata = {
@@ -35,9 +31,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
-        <AppBar>
-          <Suspense fallback={<Loading />}>{children}</Suspense>
-        </AppBar>
+        <ClientProvider>
+          <AppBar>
+            <Suspense fallback={<Loading />}>{children}</Suspense>
+          </AppBar>
+        </ClientProvider>
       </body>
     </html>
   );
