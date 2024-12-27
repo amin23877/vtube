@@ -85,7 +85,7 @@ export default function AppBar({ children }: { children: ReactNode }) {
               alt="vtube-logo"
             />
             <div
-              className="bg-[#849CA8] w-full mb-[36px] bg-opacity-[0.10] flex flex-col gap-8 p-8 rounded-[12px]"
+              className="bg-[#849CA8] w-full mb-[36px] bg-opacity-[0.10] p-8 rounded-[12px]"
               style={{
                 backdropFilter: "blur(40px)",
                 boxShadow: "24px 4px 91px 0px #00000040",

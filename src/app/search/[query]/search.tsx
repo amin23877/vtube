@@ -11,10 +11,10 @@ export default function Search({
   first_data,
 }: {
   query: string;
-  first_data: ISearch;
+  first_data?: ISearch;
 }) {
-  const [videos, setVideos] = useState<IVideo[]>(first_data.videos || []);
-  const [cursor, setCursor] = useState<string>(first_data.cursor || "");
+  const [videos, setVideos] = useState<IVideo[]>(first_data?.videos || []);
+  const [cursor, setCursor] = useState<string>(first_data?.cursor || "");
   const [isLoading, setLoading] = useState(false);
 
   const [sm, setSm] = useState<boolean>(false);
@@ -59,6 +59,15 @@ export default function Search({
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
+  useEffect(() => {
+    setLoading(true);
+    search(query, true).then((res) => {
+      setVideos((x) => [...x, ...res.videos]);
+      setCursor(res.cursor);
+      setLoading(false);
+    });
+  }, [query]);
+
   return (
     <div>
       <div className="flex flex-wrap sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 justify-start">
@@ -74,11 +83,7 @@ export default function Search({
           );
         })}
       </div>
-      {isLoading && (
-        <div className="relative w-[30px] h-[25px] mx-auto my-2">
-          <Loading />
-        </div>
-      )}
+      {isLoading && <Loading />}
     </div>
   );
 }

@@ -2,6 +2,8 @@
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { apiAgent } from "./config";
 
+export const sessionKey = "token";
+
 export async function get(path: string, config?: AxiosRequestConfig<any>) {
   const onSuccess = (response: AxiosResponse<any, any>) => {
     return response.data;

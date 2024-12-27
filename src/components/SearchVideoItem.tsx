@@ -1,6 +1,8 @@
 "use client";
 
+import { sessionKey } from "@/api";
 import { IVideo } from "@/app/types";
+import { getCookie } from "cookies-next/client";
 import Image from "next/image";
 
 export default function SearchVideoItem({
@@ -10,6 +12,8 @@ export default function SearchVideoItem({
   video: IVideo;
   sm: boolean;
 }) {
+  const token = getCookie(sessionKey);
+
   const translateList = [
     { n: "seconds", t: "ثانیه" },
     { n: "second", t: "ثانیه" },
@@ -42,7 +46,7 @@ export default function SearchVideoItem({
     >
       <Image
         style={{ aspectRatio: "16/9" }}
-        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${video.thumbnail_url}`}
+        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${video.thumbnail_url}?token=Bearer ${token}`}
         alt={video.title}
         width={480}
         height={270}

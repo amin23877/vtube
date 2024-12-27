@@ -12,6 +12,8 @@ import {
 import CenterButton from "./centerButton";
 import Controls from "./controls";
 import { IStreams } from "@/app/types";
+import { getCookie } from "cookies-next/client";
+import { sessionKey } from "@/api";
 
 type IVideoPlayer = {
   poster: string;
@@ -41,6 +43,7 @@ export default function VideoPlayer({
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const token = getCookie(sessionKey);
 
   const [playbackState, setPlaybackState] = useState<
     "playing" | "paused" | "loading"
@@ -433,7 +436,7 @@ export default function VideoPlayer({
       <div className="relative rounded-lg h-full">
         <video
           muted
-          poster={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${poster}`}
+          poster={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${poster}?token=Bearer ${token}`}
           style={{
             aspectRatio: "16/9",
             height: fullScreen || md ? "100%" : "calc(100vh - 100px - 2.5rem)",
@@ -444,7 +447,7 @@ export default function VideoPlayer({
             process.env.NEXT_PUBLIC_HOST
           }youtube/proxy-video?video_url=${encodeURIComponent(
             videoUrl
-          )}&filesize=${videoSize}`}
+          )}&filesize=${videoSize}?token=Bearer ${token}`}
         />
         <audio
           ref={audioRef}
@@ -452,7 +455,7 @@ export default function VideoPlayer({
             process.env.NEXT_PUBLIC_HOST
           }youtube/proxy-audio?audio_url=${encodeURIComponent(
             audioUrl
-          )}&filesize=${audioSize}`}
+          )}&filesize=${audioSize}?token=Bearer ${token}`}
         />
         <CenterButton
           cqLoading={cqLoading}

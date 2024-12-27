@@ -1,4 +1,7 @@
+"use client";
+import { sessionKey } from "@/api";
 import { IShort } from "@/app/types";
+import { getCookie } from "cookies-next/client";
 import Image from "next/image";
 
 export default function ShortItem({
@@ -6,6 +9,8 @@ export default function ShortItem({
   title,
   view_count,
 }: IShort) {
+  const token = getCookie(sessionKey);
+
   return (
     <div className="flex-1 w-full min-w-[210px]">
       <Image
@@ -18,7 +23,7 @@ export default function ShortItem({
           aspectRatio: "3/5",
           objectFit: "cover",
         }}
-        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${thumbnail_url}`}
+        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${thumbnail_url}?token=Bearer ${token}`}
         alt=""
       />
       <p

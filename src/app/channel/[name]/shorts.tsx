@@ -76,11 +76,7 @@ export default function Shorts({ name }: { name: string }) {
           );
         })}
       </div>
-      {isLoading && (
-        <div className="relative w-[30px] h-[25px] mx-auto my-2">
-          <Loading />
-        </div>
-      )}
+      {isLoading && <Loading />}
     </div>
   );
 }

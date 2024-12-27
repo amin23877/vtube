@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "wt.pool2jibi.com",
       },
+      {
+        protocol: "https",
+        hostname: "api.vee-tube.com",
+      },
     ],
   },
 };

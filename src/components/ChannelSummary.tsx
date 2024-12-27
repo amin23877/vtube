@@ -1,3 +1,7 @@
+"use client";
+
+import { sessionKey } from "@/api";
+import { getCookie } from "cookies-next/client";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -10,10 +14,11 @@ function ChannelSummary({
   name: string;
   subscribersCount: string;
 }) {
+  const token = getCookie(sessionKey);
   return (
     <Link href={`/channel/${name}`} className="flex gap-4 ">
       <Image
-        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${image}`}
+        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${image}?token=Bearer ${token}`}
         alt={name + "avatar"}
         width={70}
         height={70}

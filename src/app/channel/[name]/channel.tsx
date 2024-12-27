@@ -6,6 +6,8 @@ import TypeTab from "./typeTab";
 import { useState } from "react";
 import Videos from "./videos";
 import Shorts from "./shorts";
+import { sessionKey } from "@/api";
+import { getCookie } from "cookies-next/client";
 
 export default function Chanel({
   banner,
@@ -15,10 +17,11 @@ export default function Chanel({
   total_videos,
 }: IChanelData) {
   const [type, setType] = useState<React.Key>("videos");
+  const token = getCookie(sessionKey);
   return (
     <div className="p-[36px] pt-0 pb-4">
       <Image
-        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${banner}`}
+        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${banner}??token=Bearer ${token}`}
         alt={channel_name}
         className="mb-4"
         style={{
