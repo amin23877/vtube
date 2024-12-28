@@ -1,6 +1,8 @@
 import { channel_data } from "@/api/list";
 import Chanel from "./channel";
 import { IChanelData } from "@/app/types";
+import { cookies } from "next/headers";
+import { sessionKey } from "@/api";
 
 type IParams = {
   params: Promise<{
@@ -9,10 +11,15 @@ type IParams = {
 };
 
 export default async function Youtube({ params }: IParams) {
+  const token = (await cookies()).get(sessionKey)?.value;
   const { name } = await params;
   let chanelData: IChanelData | undefined;
   try {
-    chanelData = await channel_data(name);
+    chanelData = await channel_data(name, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   } catch (err) {
     console.log(err);
   }

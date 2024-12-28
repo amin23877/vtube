@@ -46,7 +46,7 @@ export default function SearchVideoItem({
     >
       <Image
         style={{ aspectRatio: "16/9" }}
-        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${video.thumbnail_url}?token=Bearer ${token}`}
+        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${video.thumbnail_url}&token=${token}`}
         alt={video.title}
         width={480}
         height={270}

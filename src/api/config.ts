@@ -10,7 +10,7 @@ export const apiAgent = Axios.create({ baseURL: BaseUrl });
 apiAgent.interceptors.request.use(
   async (config) => {
     const token = await getCookie(sessionKey);
-    if (!config.headers.Authorization) {
+    if (!config.headers.Authorization && token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
 

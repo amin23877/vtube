@@ -23,7 +23,7 @@ export default function ShortItem({
           aspectRatio: "3/5",
           objectFit: "cover",
         }}
-        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${thumbnail_url}?token=Bearer ${token}`}
+        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${thumbnail_url}&token=${token}`}
         alt=""
       />
       <p

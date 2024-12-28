@@ -21,7 +21,7 @@ export default function Chanel({
   return (
     <div className="p-[36px] pt-0 pb-4">
       <Image
-        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${banner}??token=Bearer ${token}`}
+        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${banner}&token=${token}`}
         alt={channel_name}
         className="mb-4"
         style={{

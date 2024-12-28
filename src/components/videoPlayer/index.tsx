@@ -14,6 +14,7 @@ import Controls from "./controls";
 import { IStreams } from "@/app/types";
 import { getCookie } from "cookies-next/client";
 import { sessionKey } from "@/api";
+import { useParams } from "next/navigation";
 
 type IVideoPlayer = {
   poster: string;
@@ -44,7 +45,7 @@ export default function VideoPlayer({
   const audioRef = useRef<HTMLAudioElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const token = getCookie(sessionKey);
-
+  const { id } = useParams();
   const [playbackState, setPlaybackState] = useState<
     "playing" | "paused" | "loading"
   >("paused");
@@ -417,76 +418,77 @@ export default function VideoPlayer({
 
   const button =
     "p-2 rounded-full hover:bg-opacity-15 transition-all duration-300 hover:bg-gray-100";
-
-  return (
-    <div
-      dir="ltr"
-      ref={containerRef}
-      className="rounded-3xl relative w-full h-fit bg-black dir"
-      style={{
-        aspectRatio: "16/9",
-        height: fullScreen
-          ? "100vh"
-          : md
-          ? "auto"
-          : "calc(100vh - 100px - 2.5rem)",
-      }}
-      onClick={playbackState === "paused" ? handlePlay : handlePause}
-    >
-      <div className="relative rounded-lg h-full">
-        <video
-          muted
-          poster={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${poster}?token=Bearer ${token}`}
-          style={{
-            aspectRatio: "16/9",
-            height: fullScreen || md ? "100%" : "calc(100vh - 100px - 2.5rem)",
-          }}
-          ref={videoRef}
-          className="w-full rounded-lg"
-          src={`${
-            process.env.NEXT_PUBLIC_HOST
-          }youtube/proxy-video?video_url=${encodeURIComponent(
-            videoUrl
-          )}&filesize=${videoSize}?token=Bearer ${token}`}
-        />
-        <audio
-          ref={audioRef}
-          src={`${
-            process.env.NEXT_PUBLIC_HOST
-          }youtube/proxy-audio?audio_url=${encodeURIComponent(
-            audioUrl
-          )}&filesize=${audioSize}?token=Bearer ${token}`}
-        />
-        <CenterButton
-          cqLoading={cqLoading}
-          playbackState={playbackState}
-          showPlayPauseButton={showPlayPauseButton}
-        />
-        {controlsVisible && (
-          <Controls
-            videoRef={videoRef}
-            streams={streams}
-            videoUrl={videoUrl}
-            setVideoUrl={setVideoUrl}
-            setResolution={setResolution}
-            setVideoSize={setVideoSize}
-            button={button}
-            handleForward={handleForward}
-            handleBackward={handleBackward}
-            playbackState={playbackState}
-            handleVolumeChange={handleVolumeChange}
-            volume={volume}
-            toggleFullScreen={toggleFullScreen}
-            fullScreen={fullScreen}
-            seekVideo={seekVideo}
-            progress={progress}
-            handleChangesrc={() => {
-              setCqLoading(true);
-              synchronizePlayback();
+  if (token)
+    return (
+      <div
+        dir="ltr"
+        ref={containerRef}
+        className="rounded-3xl relative w-full h-fit bg-black dir"
+        style={{
+          aspectRatio: "16/9",
+          height: fullScreen
+            ? "100vh"
+            : md
+            ? "auto"
+            : "calc(100vh - 100px - 2.5rem)",
+        }}
+        onClick={playbackState === "paused" ? handlePlay : handlePause}
+      >
+        <div className="relative rounded-lg h-full">
+          <video
+            muted
+            poster={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${poster}&token=${token}`}
+            style={{
+              aspectRatio: "16/9",
+              height:
+                fullScreen || md ? "100%" : "calc(100vh - 100px - 2.5rem)",
             }}
+            ref={videoRef}
+            className="w-full rounded-lg"
+            src={`${
+              process.env.NEXT_PUBLIC_HOST
+            }youtube/proxy-video?video_url=${encodeURIComponent(
+              videoUrl
+            )}&filesize=${videoSize}&token=${token}&video_id=${id}`}
           />
-        )}
+          <audio
+            ref={audioRef}
+            src={`${
+              process.env.NEXT_PUBLIC_HOST
+            }youtube/proxy-audio?audio_url=${encodeURIComponent(
+              audioUrl
+            )}&filesize=${audioSize}&token=${token}&audio_id=${id}`}
+          />
+          <CenterButton
+            cqLoading={cqLoading}
+            playbackState={playbackState}
+            showPlayPauseButton={showPlayPauseButton}
+          />
+          {controlsVisible && (
+            <Controls
+              videoRef={videoRef}
+              streams={streams}
+              videoUrl={videoUrl}
+              setVideoUrl={setVideoUrl}
+              setResolution={setResolution}
+              setVideoSize={setVideoSize}
+              button={button}
+              handleForward={handleForward}
+              handleBackward={handleBackward}
+              playbackState={playbackState}
+              handleVolumeChange={handleVolumeChange}
+              volume={volume}
+              toggleFullScreen={toggleFullScreen}
+              fullScreen={fullScreen}
+              seekVideo={seekVideo}
+              progress={progress}
+              handleChangesrc={() => {
+                setCqLoading(true);
+                synchronizePlayback();
+              }}
+            />
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
 }

@@ -1,6 +1,8 @@
 import { getQualities, videoInfo } from "@/api/download";
 import { IDownloadResponse, IStreams } from "@/app/types";
 import VideoPage from ".";
+import { cookies } from "next/headers";
+import { sessionKey } from "@/api";
 
 type IParams = Promise<{
   id: string;
@@ -8,8 +10,14 @@ type IParams = Promise<{
 
 export default async function Video({ params }: { params: IParams }) {
   const { id } = await params;
-  const data: IDownloadResponse = await videoInfo(id);
-  const streams: IStreams[] = await getQualities(id);
+  const token = (await cookies()).get(sessionKey)?.value;
+
+  const data: IDownloadResponse = await videoInfo(id, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const streams: IStreams[] = await getQualities(id, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   if (!data) return <></>;
 
   return <VideoPage data={data} streams={streams} />;

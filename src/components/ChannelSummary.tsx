@@ -18,7 +18,7 @@ function ChannelSummary({
   return (
     <Link href={`/channel/${name}`} className="flex gap-4 ">
       <Image
-        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${image}?token=Bearer ${token}`}
+        src={`${process.env.NEXT_PUBLIC_HOST}youtube/proxy-thumbnail?thumbnail_url=${image}&token=${token}`}
         alt={name + "avatar"}
         width={70}
         height={70}

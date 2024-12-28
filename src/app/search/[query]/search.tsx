@@ -11,7 +11,7 @@ export default function Search({
   first_data,
 }: {
   query: string;
-  first_data?: ISearch;
+  first_data: ISearch;
 }) {
   const [videos, setVideos] = useState<IVideo[]>(first_data?.videos || []);
   const [cursor, setCursor] = useState<string>(first_data?.cursor || "");
@@ -58,15 +58,6 @@ export default function Search({
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
-
-  useEffect(() => {
-    setLoading(true);
-    search(query, true).then((res) => {
-      setVideos((x) => [...x, ...res.videos]);
-      setCursor(res.cursor);
-      setLoading(false);
-    });
-  }, [query]);
 
   return (
     <div>
