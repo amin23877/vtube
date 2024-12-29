@@ -1,11 +1,11 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { channel_media } from "@/api/list";
-import { IShort } from "@/app/types";
+import { IShort } from "@/types/types";
 // import SearchVideoItem from "@/components/SearchVideoItem";
 import Link from "next/link";
 import Loading from "@/components/Loading";
-import ShortItem from "./shortItem";
+import ShortItem from "@/components/short/ShortItem";
 
 export default function Shorts({ name }: { name: string }) {
   const [shorts, setShorts] = useState<IShort[]>([]);

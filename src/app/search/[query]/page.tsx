@@ -1,6 +1,6 @@
 import { search } from "@/api/list";
-import { ISearch } from "@/app/types";
-import Search from "./search";
+import { ISearch } from "@/types/types";
+import Search from "../../../features/search";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { sessionKey } from "@/api";

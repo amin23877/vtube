@@ -1,6 +1,6 @@
 "use client";
 import { sessionKey } from "@/api";
-import { IShort } from "@/app/types";
+import { IShort } from "@/types/types";
 import { getCookie } from "cookies-next/client";
 import Image from "next/image";
 

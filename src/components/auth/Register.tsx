@@ -2,7 +2,7 @@
 
 import { sessionKey } from "@/api";
 import { signUp } from "@/api/auth";
-import CustomInput from "@/components/customInput";
+import CustomInput from "@/components/base/customInput";
 import Loading from "@/components/Loading";
 import { Button } from "@mui/material";
 import { setCookie } from "cookies-next";

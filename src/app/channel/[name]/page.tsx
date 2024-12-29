@@ -1,6 +1,6 @@
 import { channel_data } from "@/api/list";
-import Chanel from "./channel";
-import { IChanelData } from "@/app/types";
+import Chanel from "../../../features/channel";
+import { IChanelData } from "@/types/types";
 import { cookies } from "next/headers";
 import { sessionKey } from "@/api";
 

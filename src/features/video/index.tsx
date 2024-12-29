@@ -1,8 +1,8 @@
 "use client";
 
 import VideoPlayer from "@/components/videoPlayer";
-import VideoDetails from "./VideoDetails";
-import { IDownloadResponse, IStreams } from "@/app/types";
+import VideoDetails from "./Details";
+import { IDownloadResponse, IStreams } from "@/types/types";
 import { useEffect, useMemo, useState } from "react";
 
 function VideoPage({

@@ -3,7 +3,7 @@ import ProgressBar from "./progressBar";
 import Volume from "./volume";
 import Setting from "./setting";
 import PlayPauseForward from "./playPauseForward";
-import { IControls } from "@/app/types";
+import { IControls } from "@/types/types";
 
 export default function Controls({
   button,

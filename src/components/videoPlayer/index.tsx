@@ -11,7 +11,7 @@ import {
 
 import CenterButton from "./centerButton";
 import Controls from "./controls";
-import { IStreams } from "@/app/types";
+import { IStreams } from "@/types/types";
 import { getCookie } from "cookies-next/client";
 import { sessionKey } from "@/api";
 import { useParams } from "next/navigation";

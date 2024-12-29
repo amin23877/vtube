@@ -1,6 +1,6 @@
 "use client";
 import { Dispatch, SetStateAction, useState } from "react";
-import CustomInput from "@/components/customInput";
+import CustomInput from "@/components/base/customInput";
 import Loading from "@/components/Loading";
 import { Button } from "@mui/material";
 import { useFormik } from "formik";

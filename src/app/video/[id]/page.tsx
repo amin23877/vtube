@@ -1,6 +1,6 @@
 import { getQualities, videoInfo } from "@/api/download";
-import { IDownloadResponse, IStreams } from "@/app/types";
-import VideoPage from ".";
+import { IDownloadResponse, IStreams } from "@/types/types";
+import VideoPage from "../../../features/video";
 import { cookies } from "next/headers";
 import { sessionKey } from "@/api";
 

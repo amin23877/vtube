@@ -1,8 +1,8 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { channel_media } from "@/api/list";
-import { IVideo } from "@/app/types";
-import SearchVideoItem from "@/components/SearchVideoItem";
+import { IVideo } from "@/types/types";
+import SearchVideoItem from "@/components/Video/VideoItem";
 import Link from "next/link";
 import Loading from "@/components/Loading";
 

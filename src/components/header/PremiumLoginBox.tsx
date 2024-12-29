@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import Button from "../Button";
+import Button from "../base/Button";
 import crownIcon from "@/assets/appBar/crown.svg";
 import userEditIcon from "@/assets/appBar/user-edit.svg";
 import Link from "next/link";

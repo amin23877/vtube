@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
-import { IChanelData } from "@/app/types";
-import ChannelSummary from "@/components/ChannelSummary";
+import { IChanelData } from "@/types/types";
+import ChannelSummary from "@/components/channel/ChannelSummary";
 import TypeTab from "./typeTab";
 import { useState } from "react";
 import Videos from "./videos";

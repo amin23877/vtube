@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import settingIcon from "@/assets/videoPlayer/setting.svg";
-import { IStreams } from "@/app/types";
+import { IStreams } from "@/types/types";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
 

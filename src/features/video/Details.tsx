@@ -1,6 +1,6 @@
 "use client";
 
-import { IDownloadResponse } from "@/app/types";
+import { IDownloadResponse } from "@/types/types";
 
 import CountsBadge from "@/components/Badges/Counts";
 
@@ -8,10 +8,10 @@ import likeIcon from "@/assets/actions/like.svg";
 import viewIcon from "@/assets/actions/view.svg";
 import commentIcon from "@/assets/actions/comment.svg";
 
-import DownloadAudio from "@/components/pages/Video/DownloadAudio";
-import DownloadVideo from "@/components/pages/Video/DownloadVideo";
-import ChannelSummary from "@/components/ChannelSummary";
-import VideoDescription from "@/components/pages/Video/Description";
+import DownloadAudio from "@/components/Video/DownloadAudio";
+import DownloadVideo from "@/components/Video/DownloadVideo";
+import ChannelSummary from "@/components/channel/ChannelSummary";
+import VideoDescription from "@/components/Video/Description";
 
 function VideoDetails({
   data,

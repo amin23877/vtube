@@ -1,8 +1,8 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { search } from "@/api/list";
-import { ISearch, IVideo } from "@/app/types";
-import SearchVideoItem from "@/components/SearchVideoItem";
+import { ISearch, IVideo } from "@/types/types";
+import SearchVideoItem from "@/components/Video/VideoItem";
 import Link from "next/link";
 import Loading from "@/components/Loading";
 

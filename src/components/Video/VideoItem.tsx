@@ -1,7 +1,7 @@
 "use client";
 
 import { sessionKey } from "@/api";
-import { IVideo } from "@/app/types";
+import { IVideo } from "@/types/types";
 import { getCookie } from "cookies-next/client";
 import Image from "next/image";
 
