@@ -5,6 +5,8 @@ import musicHoverIcon from "@/assets/actions/musicHover.svg";
 import { useState } from "react";
 import LoadingBadge from "@/components/Badges/Loading";
 import { numberFormatter } from "@/utils/numberHelper";
+import { get } from "@/api";
+import { useParams } from "next/navigation";
 
 function DownloadAudio({
   audioUrl,
@@ -17,17 +19,18 @@ function DownloadAudio({
 }) {
   const [loading, setLoading] = useState(false);
 
+  const { id } = useParams();
+
   const downloadFile = async () => {
     setLoading(true);
     const url = `${
       process.env.NEXT_PUBLIC_HOST
     }youtube/download-audio?audio_url=${encodeURIComponent(
       audioUrl
-    )}&filename=${filename}&filesize=${filesize}`;
+    )}&filename=${filename}&filesize=${filesize}&audio_id=${id}`;
 
     try {
-      const response = await fetch(url, {
-        method: "GET",
+      const response = await get(url, {
         headers: {
           Range: "bytes=0-",
         },

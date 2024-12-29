@@ -5,6 +5,8 @@ import downloadHoverIcon from "@/assets/actions/downloadHover.svg";
 import { useState } from "react";
 import LoadingBadge from "@/components/Badges/Loading";
 import { numberFormatter } from "@/utils/numberHelper";
+import { get } from "@/api";
+import { useParams } from "next/navigation";
 
 function DownloadVideo({
   videoUrl,
@@ -18,6 +20,7 @@ function DownloadVideo({
   resolution: string;
 }) {
   const [loading, setLoading] = useState(false);
+  const { id } = useParams();
 
   const downloadFile = async () => {
     setLoading(true);
@@ -25,11 +28,10 @@ function DownloadVideo({
       process.env.NEXT_PUBLIC_HOST
     }youtube/download-video?video_url=${encodeURIComponent(
       videoUrl
-    )}&filesize=${filesize}&filename=${filename}`;
+    )}&filesize=${filesize}&filename=${filename}&video_id=${id}`;
 
     try {
-      const response = await fetch(url, {
-        method: "GET",
+      const response = await get(url, {
         headers: {
           Range: "bytes=0-",
         },

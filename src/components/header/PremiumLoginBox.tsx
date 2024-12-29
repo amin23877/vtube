@@ -3,6 +3,7 @@ import Image from "next/image";
 import Button from "../Button";
 import crownIcon from "@/assets/appBar/crown.svg";
 import userEditIcon from "@/assets/appBar/user-edit.svg";
+import Link from "next/link";
 
 export default function PremiumLoginBox({
   display,
@@ -35,24 +36,26 @@ export default function PremiumLoginBox({
           "خرید اشتراک"
         )}
       </Button>
-      <Button
-        width={md ? "fit-content" : undefined}
-        bgcolor="#2F3136"
-        padding={md ? "11px" : undefined}
-        radius={md ? "100%" : ""}
-      >
-        {md ? (
-          <Image
-            src={userEditIcon}
-            alt=""
-            width={20}
-            height={20}
-            style={{ minWidth: "20px" }}
-          />
-        ) : (
-          "ورود / ثبت نام"
-        )}
-      </Button>
+      <Link href="/signIn">
+        <Button
+          width={md ? "fit-content" : undefined}
+          bgcolor="#2F3136"
+          padding={md ? "11px" : undefined}
+          radius={md ? "100%" : ""}
+        >
+          {md ? (
+            <Image
+              src={userEditIcon}
+              alt=""
+              width={20}
+              height={20}
+              style={{ minWidth: "20px" }}
+            />
+          ) : (
+            "ورود / ثبت نام"
+          )}
+        </Button>
+      </Link>
     </div>
   );
 }
